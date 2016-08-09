@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <link rel="import" href="../head.html?__inline">
+    <title>快速接洽</title>
+</head>
+<body class="bg_fff">
+<div class="re  wp100">
+	<img class="wp100" src="../../images/coop.png">
+	<img class="float-img" style="bottom: -58px;" src="../../images/myb.png">
+</div>
+<div class="mzidong wp82 bg_fff">
+<table class=" biaoge wp100 tl mt60 cp-bg">
+	<tr>
+    	<th>公司名称</th>
+    	<td>
+	    	<div class="b_bd pl4 wp100 pr">
+		    	<input id="compName" type="text"/>
+		    	<span class="err_tip t_0">公司名称未填</span>
+		    	<span class="err_tip t_0">不能超过64位</span>
+	    	</div>
+    	</td>
+     </tr>
+     <tr>
+    	<th>联系人</th>
+    	<td>
+	    	<div class="b_bd pl4 wp100 pr">
+		    	<input id="person" type="text"/>
+		    	<span class="err_tip t_0">联系人未填</span>
+		    	<span class="err_tip t_0">不能超过64位</span>
+	    	</div>
+    	</td>
+     </tr>
+       <tr>
+    	<th>联系方式</th>
+    	<td>
+    		<div class="b_bd pl4 wp100 pr">
+	    		<input id="telephone" type="text"/>
+	    		<span class="err_tip t_0">联系方式未填</span>
+	    		<span class="err_tip t_0">格式错误</span>
+    		</div>
+    	</td>
+     </tr>
+      <tr>
+    	<th class="va">意向描述</th>
+    	<td>
+	    	<div class="b_bd wp100 pl4 yixiang pr">
+		    	<textarea id="remark" class="wp100 hp100 "></textarea>
+		    	<span class="err_tip b_0">意向描述未填</span>
+		    	<span class="err_tip b_0">不能超过255位</span>
+	    	</div>
+    	</td>
+     </tr>
+</table>
+	<span id="sbt" class="wp100 btn btn_orange btnshezhi mt14">提交</span>
+</div>
+<script src="../../js/require.js"></script>
+<script src="../../js/lib/jquery-2.1.4.js"></script>
+<script>
+    require(['app/controller/Cooperation']);
+</script>
+</body>
+</html>
