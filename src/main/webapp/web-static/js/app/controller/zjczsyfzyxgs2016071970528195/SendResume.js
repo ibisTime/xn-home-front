@@ -20,6 +20,9 @@ define([
                     sendResume();
                 }
             });
+            $("#downloadIcon").on("click", function(){
+                parent.window.location.href = "../../menu/content.html?tmp=002&ct=list&cp=zjczsyfzyxgs2016071970528195&m=Menu2016072050826152&u=0&pc=Menu2016072030940399";
+            });
         }
         function sendResume(){
             ajaxFileUpload(APIURL + '/upload/file', "file1");

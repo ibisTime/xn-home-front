@@ -7,13 +7,16 @@ define([
 ], function (base, Ajax, flexSlider, Handlebars, dialog) {
     $(function () {
     	var COMPANYCODE = base.getUrlParam("cp");
-    	var footTmpl = __inline('../../ui/foot.handlebars'),
-    		arr = [$("#about"), $("#service"), $("#contact")];
+    	var footTmpl = __inline('../../ui/foot.handlebars');
 		initView();
 		function initView(){
+			//获取菜单
 			getMenuList();
+			//获取公司详情
 			getCompnany();
+			//获取银行保险车行
 			getRCont();
+			//新闻资讯
 			getLCont();
 			addListeners();
 		}
@@ -21,23 +24,28 @@ define([
 			Ajax.get(APIURL + '/company/menu/list', {"companyCode": COMPANYCODE}, true)
 				.then(function (res) {
 					if(res.success){
-						var data = res.data, html = "", menuArr1 = {}, menuArr = {};
+						//menuArr1存储所有菜单数据，menuArr按父子关系保存菜单数据，menuSeq保存一级菜单的顺序
+						var data = res.data, html = "", menuArr1 = {}, menuArr = {}, menuSeq = [];
 						for(var j = 0, len = data.length; j < len; j++){
 							var dd = data[j], pc = dd.parentCode;
 							menuArr1[dd.code] = dd;
 							if(!pc || pc == "0"){
 								if(!menuArr[dd.code]){
 									menuArr[dd.code] = [];
+									menuSeq.push(dd.code);
 								}
 							}else{
 								if(!menuArr[pc]){
 									menuArr[pc] = [];
+									menuSeq.push(pc);
 								}
 								menuArr[pc].push(dd);
 							}
 						}
-						for(var n in menuArr){
-							var d = menuArr1[n];
+						//for(var n in menuArr){
+						for(var j = 0; j < menuSeq.length; j++){
+							//var d = menuArr1[n];
+							var d = menuArr1[menuSeq[j]];
 							if(d.url && d.code.indexOf("Index") != -1){
 								html = '<li><a href="'+d.url+'?cp='+COMPANYCODE+'" class="wa active">'+d.name+'</a></li>' + html;
 							}else{
@@ -409,7 +417,9 @@ define([
 					$("#gc-sbtn").removeClass("isdoing").text("提交");
 					if(res.success){
 						showMsg("提交成功！");
-
+						setTimeout(function(){
+							$("#gcsq-close").click();
+						}, 2000);
 					}else{
 						showMsg("提交失败！");
 					}
@@ -429,6 +439,9 @@ define([
 					$("#hz-sbtn").removeClass("isdoing").text("提交");
 					if(res.success){
 						showMsg("提交成功！");
+						setTimeout(function(){
+							$("#hzsq-close").click();
+						}, 2000);
 					}else{
 						showMsg("提交失败！");
 					}
@@ -436,7 +449,8 @@ define([
 		}
 		function validateGCSQ(){
 			return validateGcName() && validateGcage() &&
-				validateGcMobile() && validateGcygcx() && validateGcamount && validateGcarea();
+				validateGcMobile() && validateGcygcx() &&
+				validateGcamount && validateGcarea();
 		}
 		function validateGcName(){
 			var ele = $("#gc-name"),

@@ -24,6 +24,7 @@ input,select,button{-webkit-appearance: none;-moz-appearance: none;appearance: n
 .nav li a{ height:117px; float:left; padding:0 8px; display:inline; font:16px/120px "微软雅黑";}
 .nav li .wa{ border-bottom:solid 3px #fff; color:#000;}
 .nav li .wa.active{ border-bottom:solid 3px #a46810; color:#a46810; background:#f2f2f2;}
+.top .nav li a:hover{transform: scale(1.1);}
 .top .tel{ height: 30px;right: 0;position: absolute;margin-top: 46px;display: inline;}
 .tel .icon{ width:30px; height:30px; float:left; background:url(../images/tel_icon.png) no-repeat;}
 .tel .wz{ font:18px/30px "微软雅黑"; color:#a46810; margin-left:8px; display:inline; float:left;}
