@@ -19,6 +19,7 @@ define([
                             }else{
                                 dd.funds = base.fmoney(+dd.funds);
                                 dd.status = base.dict["caseStatus"][dd.status] || "未知状态";
+                                dd.description = dd.description.replace(/(?:<\/?[^>]*>)/gi, "");
                                 if(dd.description.length >= 36){
                                     dd.description = dd.description.substr(0, 36) + "...";
                                 }

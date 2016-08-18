@@ -23,11 +23,11 @@ define([
                     if(data.length){
                         data.forEach(function (d) {
                             if(d.kind == 1){
-                            	html1+= '<a class="tag ml20 mt10 tc .s_11" href="./component.html?code='+d.code+'&n='+d.name+'">'+d.name+'</a>';
+                            	html1+= '<a class="tag mlr10 mt10 tc .s_11" href="./component.html?code='+d.code+'&n='+d.name+'">'+d.name+'</a>';
                             }else if(d.kind == 2){
-                            	html2+= '<a class="tag ml20 mt10 tc .s_11" href="./component.html?code='+d.code+'&n='+d.name+'">'+d.name+'</a>';
+                            	html2+= '<a class="tag mlr10 mt10 tc .s_11" href="./component.html?code='+d.code+'&n='+d.name+'">'+d.name+'</a>';
                             }else if(d.kind == 3){
-                            	html3+= '<a class="tag ml20 mt10 tc .s_11" href="./component.html?code='+d.code+'&n='+d.name+'">'+d.name+'</a>';
+                            	html3+= '<a class="tag mlr10 mt10 tc .s_11" href="./component.html?code='+d.code+'&n='+d.name+'">'+d.name+'</a>';
                             }
                         });
                         $("#mxc").html(html1 || '<div style="text-align: center;padding: 10px 0;">暂无数据！</div>');

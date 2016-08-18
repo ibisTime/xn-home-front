@@ -23,7 +23,7 @@ define([
                     if(data.length){
                         data = data[0];
                         $("#comImg").attr("src", data.picture);
-                        $("#comCont").text(data.description);
+                        $("#comCont").html(data.description);
                     }else{
                         doError();
                     }

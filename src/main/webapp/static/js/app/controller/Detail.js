@@ -24,7 +24,7 @@ define([
                                 "border": "1px solid #666"
                             });
                         }
-                        $("#desc").text(data.description);
+                        $("#desc").html(data.description);
                     }else{
                         doError();
                     }

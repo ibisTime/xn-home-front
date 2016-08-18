@@ -49,7 +49,7 @@ define([
 							if(d.url && d.code.indexOf("Index") != -1){
 								html = '<li><a href="'+d.url+'?cp='+COMPANYCODE+'" class="wa active">'+d.name+'</a></li>' + html;
 							}else{
-								html += '<li><a target="_blank" href="../../menu/content.html?tmp='+d.templetCode+'&ct='+d.contentType+'&cp='+COMPANYCODE+'&m='+d.code+'" class="wa time1">'+d.name+'</a></li>';
+								html += '<li><a href="../../menu/content.html?tmp='+d.templetCode+'&ct='+d.contentType+'&cp='+COMPANYCODE+'&m='+d.code+'" class="wa time1">'+d.name+'</a></li>';
 							}
 						}
 						html = '<ul>'+ html +'</ul>';

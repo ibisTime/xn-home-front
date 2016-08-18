@@ -96,6 +96,7 @@ define([
                 .then(function (res) {
                     $("#sbtn").removeClass("isdoing").val("提交");
                     if(res.success){
+                        $("#content1").val("");
                         showMsg('上传成功');
                     }else{
                         showMsg('上传失败');
