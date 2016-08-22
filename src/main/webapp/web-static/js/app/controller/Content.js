@@ -204,12 +204,11 @@ define([
 							 if(!pc || pc == "0"){
 								 if(!menuArr[dd.code]){
 									 menuArr[dd.code] = [];
-									 menuSeq.push(dd.code);
 								 }
+								 menuSeq.push(dd.code);
 							 }else{
 								 if(!menuArr[pc]){
 									 menuArr[pc] = [];
-									 menuSeq.push(pc);
 								 }
 								 menuArr[pc].push(dd);
 							 }
