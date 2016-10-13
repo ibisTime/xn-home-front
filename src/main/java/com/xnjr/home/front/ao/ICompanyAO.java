@@ -10,8 +10,7 @@ public interface ICompanyAO {
      * @create: 2015年9月9日 下午4:48:58 myb858
      * @history:
      */
-    XN704004Res doGetCompany(String code);
-
-    Object doGetCompanyIdeas(String code, String companyCode);
-
+    Object doGetCompany(String code);
+    
+    Object getCompanyByUrl(String url);
 }

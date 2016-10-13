@@ -1495,6 +1495,10 @@ textarea {
     width: 100%;
 }
 
+.wp200p {
+    width: 200px;
+}
+
 /*高度*/
 .hp100 {
     height: 100%;
@@ -1879,7 +1883,7 @@ label.error {
 .homeimage{background-image:url(../images/fhgh.png);}
 .font-daxiao{font-size:1.4rem;}
 .backa{position:absolute;margin:auto;
-left:0;right:0;top:0;bottom:0;display:block;width:75%;
+left:0;right:0;top:0;bottom:0;display:block;
 }
 .lastbacka{position:absolute;margin:auto;
 left:0;right:0;top:0;bottom:30px;display:block;width:50%;
@@ -2057,4 +2061,7 @@ font-size: 16px;
 }
 .custom-ul>li:last-child{
     border-right: 1px solid #e6e6e6;
+}
+.max-hp100p{
+    max-height: 100px;
 }

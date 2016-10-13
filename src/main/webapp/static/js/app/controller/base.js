@@ -1,4 +1,8 @@
-define(['app/util/common'], function (common) {
+define([
+    'app/util/common',
+    'app/util/ajax',
+    'app/util/dialog'
+], function (common, Ajax, dialog) {
 
     //FastClick.attach(document.body);
 
@@ -142,12 +146,60 @@ define(['app/util/common'], function (common) {
             }
             return t.split("").reverse().join("") + (n == 0 ? "" : ("." + r)) + unit;
         },
-        dict: {
-            caseStatus: {
-                "1": "洽谈中",
-                "2": "版本迭代中",
-                "3": "已完结"
+        showMsg: function (msg, time){
+            var d = dialog({
+                content: msg,
+                quickClose: true
+            });
+            d.show();
+            setTimeout(function () {
+                d.close().remove();
+            }, time || 2000);
+        },
+        getCompany: function(code){
+            return Ajax.get(APIURL + '/company/info', {"companyCode": code}, true);
+        },
+        getCompanyByUrl: function(){
+            var url = location.href;
+            var idx = url.indexOf("/m/");
+            if(idx != -1){
+                url = url.substring(0, idx);
             }
+            return Ajax.get(APIURL + '/company/byUrl', {"url": url}, true)
+                .then(function (res) {
+                    if (res.success) {
+                        sessionStorage.setItem("compCode", res.data.code);
+                    }
+                });
+        },
+        getWXMenuCode: function (code){
+            return Ajax.get(APIURL + '/company/menu/list', 
+                {"companyCode": code, "location": 2}, true)
+                .then(function (res) {
+                    if (res.success) {
+                        var data = res.data;
+                        sessionStorage.setItem("wxMenuCode", data[0].code);
+                        sessionStorage.setItem("wxMenuName", data[0].name);
+                    }
+                });
+        },
+        getCompMenuList: function (code){
+            return Ajax.get(APIURL + '/company/menu/list', 
+                {"companyCode": code, "location": 3}, true);
+        },
+        getBanner: function (code, location){
+            return Ajax.get(APIURL + '/company/banner/list',
+                {"companyCode": code, "location": location}, true);
+        },
+        getContentPage: function(code, start, limit){
+            return Ajax.get(APIURL + "/company/acontent/page",
+                {"menuCode": code, "start": start, "limit": limit}, true);
+        },
+        getContent: function(code){
+            return Ajax.get(APIURL + "/company/acontent", {"code": code}, true);
+        },
+        getContentList: function(code){
+            return Ajax.get(APIURL + '/company/acontent/list', {"menuCode": code}, true);
         }
 };
     return Base;

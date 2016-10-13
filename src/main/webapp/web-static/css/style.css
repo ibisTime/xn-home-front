@@ -316,3 +316,6 @@ input,select,button{-webkit-appearance: none;-moz-appearance: none;appearance: n
 	right: 14px;
 	top: 8px;
 }
+.wp100{
+	width: 100%;
+}

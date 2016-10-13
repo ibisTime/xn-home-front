@@ -147,6 +147,50 @@ define(['app/util/common'], function (common) {
                 t += l[i] + ((i + 1) % 3 == 0 && (i + 1) != l.length ? "," : "");
             }
             return t.split("").reverse().join("") + (n == 0 ? "" : ("." + r)) + unit;
+        },
+        showMsg: function (msg, time){
+            var d = dialog({
+                content: msg,
+                quickClose: true
+            });
+            d.show();
+            setTimeout(function () {
+                d.close().remove();
+            }, time || 2000);
+        },
+        getCompany: function(code){
+            return Ajax.get(APIURL + '/company/info', {"companyCode": code}, true);
+        },
+        getCompanyByUrl: function(){
+            var url = location.href;
+            var idx = url.indexOf("/w/");
+            if(idx != -1){
+                url = url.substring(0, idx);
+            }
+            return Ajax.get(APIURL + '/company/byUrl', {"url": url}, true)
+                .then(function (res) {
+                    if (res.success) {
+                        sessionStorage.setItem("compCode", res.data.code);
+                    }
+                });
+        },
+        getMenuList: function (code){
+            return Ajax.get(APIURL + '/company/menu/list', 
+                {"companyCode": code}, true);
+        },
+        getBanner: function (code, location){
+            return Ajax.get(APIURL + '/company/banner/list',
+                {"companyCode": code, "location": location}, true);
+        },
+        getContentPage: function(code, start, limit){
+            return Ajax.get(APIURL + "/company/acontent/page",
+                {"menuCode": code, "start": start, "limit": limit}, true);
+        },
+        getContent: function(code){
+            return Ajax.get(APIURL + "/company/acontent", {"code": code}, true);
+        },
+        getContentList: function(code){
+            return Ajax.get(APIURL + '/company/acontent/list', {"menuCode": code}, true);
         }
 };
     return Base;

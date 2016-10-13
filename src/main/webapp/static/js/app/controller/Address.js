@@ -5,18 +5,43 @@ define([
 ], function (base, Ajax, Handlebars) {
     $(function(){
         var template = __inline("../ui/error-fragment.handlebars");
-        Ajax.get(APIURL + '/company/info',{"companyCode": COMPANYCODE}, true)
-            .then(function (res) {
-                $(".icon-loading").remove();
-                if(res.success){
-                    var data = res.data;
-                    $("#description").text(data.description);
-                    addMap(data.longitude, data.latitude);
-                    $("#brief").html('地址：'+data.address+'</br>电话：'+data.telephone+'</br>网址：'+data.url);
-                }else{
-                    doError();
-                }
-            });
+        var COMPANYCODE;
+
+        init();
+
+        function init(){
+            if(COMPANYCODE = sessionStorage.getItem("compCode")){
+                getCompanyInfo();
+            }else{
+                base.getCompanyByUrl().then(function(res){
+                    if(COMPANYCODE = sessionStorage.getItem("compCode")){
+                        addCompanyInfo(res);
+                    }else{
+                        base.showMsg("非常抱歉，暂时无法获取公司信息!");
+                    }
+                });
+            }
+        }
+
+        function getCompanyInfo(){
+            base.getCompany(COMPANYCODE)
+                .then(function (res) {
+                    addCompanyInfo(res);
+                });
+        }
+
+        function addCompanyInfo(res){
+            $(".icon-loading").remove();
+            if(res.success){
+                var data = res.data;
+                $("#description").text(data.description);
+                addMap(data.longitude, data.latitude);
+                $("#brief").html('地址：'+data.address+'</br>电话：'+data.telephone+'</br>网址：'+data.url);
+            }else{
+                doError();
+            }
+        }
+
         function doError() {
             $("#allmap, #description").remove();
             $("body").removeClass("bg_fff");

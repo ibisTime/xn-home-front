@@ -6,17 +6,17 @@
 </head>
 
 <body>
+    <i class="icon-loading" style="position: fixed;top: -36px;height: 100%;background-color: #fff;"></i>
     <div class="swiper-container">
-        <div class="swiper-wrapper" style="display: -webkit-box;display: -moz-box;">
-            <div class="swiper-slide"><img class="wp100" src="../../images/center1.png"></div>
-            <div class="swiper-slide"><img class="wp100" src="../../images/center2.png"></div>
+        <div class="swiper-wrapper" style="display: -webkit-box;display: -moz-box;" id="swr">
+            <!--<div class="swiper-slide"><img class="wp100" src="../../images/center1.png"></div>-->
         </div>
         <!-- 如果需要分页器 -->
         <div class="swiper-pagination"></div>
     </div>
 	<div class="wp100 bg_fff b_e6_tb clearfix mt6 ">
- 		 <ul class="clearfix custom-ul">
-            <li class="wp50 fl">
+ 		 <ul class="clearfix custom-ul" id="customUl">
+            <!--<li class="wp50 fl">
                 <div class="plr12">
                     <div class="p">
                         <a class="re wp100" href="./content.html">
@@ -25,47 +25,7 @@
                     </div>
                     <div class="mt14 t-3dot">标题标题</div>
                 </div>
-            </li>
-            <li class="wp50 fl">
-                <div class="plr12">
-                    <div class="p">
-                        <a class="re wp100">
-                            <div><img class="p-pic" src="../../images/ttt.png"/></div>
-                        </a>
-                    </div>
-                    <div class="mt14 t-3dot">标题标题</div>
-                </div>
-            </li>
-            <li class="wp50 fl">
-                <div class="plr12">
-                    <div class="p">
-                        <a class="re wp100">
-                            <div><img class="p-pic" src="../../images/ttt.png"/></div>
-                        </a>
-                    </div>
-                    <div class="mt14 t-3dot">标题标题</div>
-                </div>
-            </li>
-            <li class="wp50 fl">
-                <div class="plr12">
-                    <div class="p">
-                        <a class="re wp100">
-                            <div><img class="p-pic" src="../../images/ttt.png"/></div>
-                        </a>
-                    </div>
-                    <div class="mt14 t-3dot">标题标题</div>
-                </div>
-            </li>
-            <li class="wp50 fl">
-                <div class="plr12">
-                    <div class="p">
-                        <a class="re wp100">
-                            <div><img class="p-pic" src="../../images/ttt.png"/></div>
-                        </a>
-                    </div>
-                    <div class="mt14 t-3dot">标题标题</div>
-                </div>
-            </li>
+            </li>-->
  		 </ul>
     </div>
     <div style="height:63px;"></div>
@@ -76,7 +36,7 @@
         </a>
         <a class="fl tc wp25 t_aaa pt4 pb4 active s_11" href="./custom.html">
             <div class="pt4 pb4"><i class="iconfont icon-icon1 s_20"></i></div>
-            <p>顶级菜单</p>
+            <p id="wxdjcd"></p>
         </a>
         <a class="fl tc wp25 t_aaa pt4 pb4 s_11" href="../company/brief.html">
             <div class="pt4 pb4"><i class="iconfont icon-jianjie s_20"></i></div>
