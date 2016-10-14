@@ -14,32 +14,31 @@ define([
             // 如果需要分页器
             pagination: '.swiper-pagination'
         });
-	//initView();
+	initView();
 	function initView(){
 
 		if(COMPANYCODE = sessionStorage.getItem("compCode")){
+			base.addIcon();
+			getMenuList();
 			getCompany();
 			getBanner();
 		}else{
-			base.getCompanyByUrl()
-				.then(function(res){
-					if(COMPANYCODE = sessionStorage.getItem("compCode")){
-						getBanner();
-						addCompanyInfo(res);
-					}else{
-						base.showMsg("非常抱歉，暂时无法获取公司信息!");
-					}
-				});
+			base.getCompanyByUrl(getMyCont);
 		}
-
-		//获取菜单
-		getMenuList();
-		//获取公司详情
-		getCompnany();
 		addListeners();
 	}
+	function getMyCont(res){
+		if(COMPANYCODE = sessionStorage.getItem("compCode")){
+			base.addIcon();
+			getMenuList();
+			getBanner();
+			addCompanyInfo(res);
+		}else{
+			base.showMsg("非常抱歉，暂时无法获取公司信息!");
+		}
+	}
 	function getMenuList(){
-		base.getMenuList(COMPANYCODE)
+		return base.getMenuList(COMPANYCODE)
 			.then(function (res) {
 				if(res.success){
 					//menuArr1存储所有菜单数据，menuArr按父子关系保存菜单数据，menuSeq保存一级菜单的顺序
@@ -60,12 +59,15 @@ define([
 						}
 					}
 					for(var j = 0; j < menuSeq.length; j++){
-						//父菜单
-						var d = menuArr1[menuSeq[j]];
-						if(d.url && d.code.indexOf("Index") != -1){
-							html = '<li><a href="./index.html" class="wa active">'+首页+'</a></li>' + html;
-						}else{
-							html += '<li><a href="../menu/content.html?ct='+d.contentType+'&m='+d.code+'" class="wa time1">'+d.name+'</a></li>';
+						//不是微信顶级菜单
+						if(!/^wei/.test(menuSeq[j])){
+							//父菜单
+							var d = menuArr1[menuSeq[j]];
+							if(/^ind/.test(d.code)){
+								html = '<li><a href="./index.html" class="wa active">首页</a></li>' + html;
+							}else{
+								html += '<li><a href="../menu/content.html?ct='+d.contentType+'&m='+d.code+'" class="wa time1">'+d.name+'</a></li>';
+							}
 						}
 					}
 					html = '<ul>'+ html +'</ul>';
@@ -79,8 +81,8 @@ define([
 				}
 			});
 	}
-	function getCompnany(){
-		base.getCompany()
+	function getCompany(){
+		base.getCompany(COMPANYCODE)
 			.then(function(res){
 				addCompanyInfo(res);
 			});
@@ -88,23 +90,56 @@ define([
 
 	function addCompanyInfo(res){
 		if(res.success){
-			//获取菜单列表
-			getMenuList();
 			var data = res.data,
 				html = footTmpl(data);
-			$("#top-tel").text(data.telephone);
+			$("#top-tel").text(data.mobile);
 			$("#foot").replaceWith(html);
-			if(data.description.length > 250){
-				data.description = data.description.substr(0, 255) + "...";
-			}
-			$("#companyCont").html(data.description);
 			$("#companyLogo").attr("src", data.logo);
+			$("#qrCode").attr("src", data.qrCode);
+			$("#bigQrCode").attr("src", data.qrCode);
 		}else{
 			base.showMsg("非常抱歉，暂时无法获取公司信息!")
 		}
 	}
 
+	function getBanner(){
+        base.getBanner(COMPANYCODE, 1)
+            .then(function(res){
+                if(res.success){
+                    var data = res.data, html = "";
+                    for(var i = 0; i < data.length; i++){
+                        html += '<div class="swiper-slide"><img class="wp100" src="'+data[i].pic+'"></div>';
+                    }
+                    $("#swr").html(html);
+                    swiperImg();
+                }else{
+					base.showMsg("非常抱歉，暂时无法获取数据!")
+				}
+            });
+    }
+
+	function swiperImg(){
+        var mySwiper = new Swiper ('.swiper-container', {
+            direction: 'horizontal',
+            loop: true,
+            autoplay: 2000,
+            autoplayDisableOnInteraction: false,
+            // 如果需要分页器
+            pagination: '.swiper-pagination'
+        });
+    }
+
 	function addListeners(){
+
+		$("#qrCode").on("click", function(){
+			$("#mask").removeClass("hidden");
+			$("#bigQrCode").removeClass("hidden");
+		});
+		$("#mask, #bigQrCode").on("click", function(){
+			$("#mask").addClass("hidden");
+			$("#bigQrCode").addClass("hidden");
+			$("#hzsq-dialog").addClass("hidden");
+		});
 
 		$("#hzsq-close").on("click", function(){
 			$("#mask").addClass("hidden");
@@ -159,16 +194,6 @@ define([
 		}).on("change", function(){
 			validateHzMobile();
 		});
-		$("#hzjj").on("keyup", function(e){
-			var keyCode = e.charCode || e.keyCode,
-				placeholder = $(this).prev();
-			this.value != "" ? placeholder.hide() : placeholder.show();
-			if(keyCode == 13){
-				$("#hz-sbtn").click();
-			}
-		}).on("change", function(){
-			validateHzjj();
-		});
 		$("#hznr").on("keyup", function(e){
 			var keyCode = e.charCode || e.keyCode,
 				placeholder = $(this).prev();
@@ -184,11 +209,10 @@ define([
 	function doHZSQ(){
 		Ajax.post(APIURL + '/company/addPartner',
 			{
-				"organization": $("#hzdw-name").val(),
-				"person": $("#hz-name").val(),
-				"contact": $("#hz-mobile").val(),
-				"content1": $("#hznr").val(),
-				"organizationDesc": $("#hzjj").val(),
+				"fromCompany": $("#hzdw-name").val(),
+				"fromPerson": $("#hz-name").val(),
+				"fromContact": $("#hz-mobile").val(),
+				"content": $("#hznr").val(),
 				"companyCode": COMPANYCODE
 			}).then(function(res){
 				$("#hz-sbtn").removeClass("isdoing").text("提交");
@@ -196,7 +220,7 @@ define([
 					base.showMsg("提交成功！");
 					setTimeout(function(){
 						$("#hzsq-close").click();
-					}, 2000);
+					}, 1500);
 				}else{
 					base.showMsg("提交失败！");
 				}
@@ -204,7 +228,7 @@ define([
 	}
 	function validateHZSQ(){
 		return validateHzdwName() && validateHzName() &&
-			validateHzMobile() && validateHzjj() && validateHznr();
+			validateHzMobile() && validateHznr();
 	}
 	function validateHzdwName(){
 		var ele = $("#hzdw-name"),
@@ -241,18 +265,6 @@ define([
 		}else if( !(isPhone.test(mVal) || isMob.test(mVal)) ){
 			flag = false;
 			ele.next().next().fadeIn(150).fadeOut(3000);
-		}
-		return flag;
-	}
-	function validateHzjj(){
-		var ele = $("#hzjj"),
-			mVal = ele.val(), flag = true;
-		if(isEmpty(mVal)){
-			ele.next().fadeIn(150).fadeOut(3000);
-			flag = false;
-		}else if(mVal.length > 255){
-			ele.next().next().fadeIn(150).fadeOut(3000);
-			flag = false;
 		}
 		return flag;
 	}

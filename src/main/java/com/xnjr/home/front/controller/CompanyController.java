@@ -80,12 +80,11 @@ public class CompanyController {
     @ResponseBody
     public Object doGetAContentPage(
             @RequestParam(value = "kind", required = false) String kind,
-            @RequestParam(value = "type", required = false) String type,
             @RequestParam(value = "title", required = false) String title,
             @RequestParam("start") String start,
             @RequestParam("limit") String limit,
             @RequestParam("menuCode") String menuCode) {
-        return contentAO.doGetAContentPage(kind, type, title,
+        return contentAO.doGetAContentPage(kind, title,
                 menuCode, start, limit);
     }
     //列表获取素材
@@ -93,10 +92,9 @@ public class CompanyController {
     @ResponseBody
     public Object doGetAContentList(
             @RequestParam(value = "kind", required = false) String kind,
-            @RequestParam(value = "type", required = false) String type,
             @RequestParam(value = "title", required = false) String title,
             @RequestParam("menuCode") String menuCode) {
-        return contentAO.doGetAContentList(kind, type, title, menuCode);
+        return contentAO.doGetAContentList(kind, title, menuCode);
     }
     //详情获取素材
     @RequestMapping(value = "/acontent", method = RequestMethod.GET)

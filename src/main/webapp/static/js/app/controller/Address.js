@@ -5,24 +5,33 @@ define([
 ], function (base, Ajax, Handlebars) {
     $(function(){
         var template = __inline("../ui/error-fragment.handlebars");
-        var COMPANYCODE;
+        var COMPANYCODE, wxMenuCode = "", wxMenuName = "";
 
         init();
 
         function init(){
             if(COMPANYCODE = sessionStorage.getItem("compCode")){
+                base.addIcon();
                 getCompanyInfo();
+                if(wxMenuCode = sessionStorage.getItem("wxMenuCode")){
+                    wxMenuName = sessionStorage.getItem("wxMenuName");
+                    $("#wxdjcd").text(wxMenuName);
+                }else{
+                    getWXCode();
+                }
             }else{
-                base.getCompanyByUrl().then(function(res){
-                    if(COMPANYCODE = sessionStorage.getItem("compCode")){
-                        addCompanyInfo(res);
-                    }else{
-                        base.showMsg("非常抱歉，暂时无法获取公司信息!");
-                    }
-                });
+                base.getCompanyByUrl(getMyCont);
             }
         }
-
+        function getMyCont(res){
+            if(COMPANYCODE = sessionStorage.getItem("compCode")){
+                base.addIcon();
+                addCompanyInfo(res);
+                getWXCode();
+            }else{
+                base.showMsg("非常抱歉，暂时无法获取公司信息!");
+            }
+        }
         function getCompanyInfo(){
             base.getCompany(COMPANYCODE)
                 .then(function (res) {
@@ -40,6 +49,24 @@ define([
             }else{
                 doError();
             }
+        }
+
+        function getWXCode(){
+            return base.getMenuList(COMPANYCODE)
+                .then(function(res){
+                    if(res.success){
+                        var list = res.data;
+                        for(var i = 0; i < list.length; i++){
+                            if(/^wei/.test(list[i].code)){
+                                wxMenuCode = list[i].code;
+                                wxMenuName = list[i].name;
+                                sessionStorage.setItem("wxMenuCode", wxMenuCode)
+                                sessionStorage.setItem("wxMenuName", wxMenuName);
+                                $("#wxdjcd").text(wxMenuName);
+                            }
+                        }
+                    }
+                });
         }
 
         function doError() {

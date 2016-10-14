@@ -16,7 +16,7 @@ public class CompanyAOImpl implements ICompanyAO {
     }
 
     public Object getCompanyByUrl(String url){
-    	return BizConnecter.getBizData("806013",
-    		JsonUtils.string2Json("url", url), Object.class);
+    	return BizConnecter.getBizData("806015",
+    		JsonUtils.string2Json("domain", url), Object.class);
     }
 }

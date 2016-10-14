@@ -2,13 +2,13 @@
 <html lang="zh-CN">
 <head>
 	<link rel="import" href="../head.html?__inline"/>
-	<title>浙江诚晟实业发展有限公司山东分公司成立 - 企业新闻 - 浙江诚晟实业发展有限公司</title>
+	<title></title>
 </head>
 <body>
     <form>
 		<div class="top">
 		    <div class="main">
-		        <div class="logo"><img src="#"></div>
+		        <div class="logo"><img id="companyLogo" src="#"></div>
 		        <div id="nav" class="nav"></div>
 		        <div class="tel"><span class="icon"></span><span id="top-tel" class="wz"></span></div>
 		    </div>
@@ -26,10 +26,13 @@
         <div class="clear"></div>
         <div id="foot" class="foot"></div>
     </form>
+    <div id="mask" class="mask hidden"></div>
+    <div class="wp100 tc bigQrCode"><img id="bigQrCode" class="hidden" src="" /></div>
 	<script src="../../js/require.js"></script>
 	<script src="../../js/lib/jquery-2.1.4.js"></script>
+    <script type="text/javascript" src="//api.map.baidu.com/api?v=2.0&ak=GtNrG008U04GONzKSDHiW70GxurUUhlU&s=1"></script>
 	<script>
-	    require(['app/controller/Content']);
+	    require(['app/controller/SContent']);
 	</script>
 </body>
 </html>

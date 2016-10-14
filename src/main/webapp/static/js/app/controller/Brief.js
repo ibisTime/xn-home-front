@@ -6,30 +6,32 @@ define([
     init();
     function init(){
         if(COMPANYCODE = sessionStorage.getItem("compCode")){
+            base.addIcon();
             getCompany()
                 .then(function(){
-                    getCompMenuList();
                     getBanner();
                 });
+            getCompMenuList();
             if(sessionStorage.getItem("wxMenuCode")){
                 var name = sessionStorage.getItem("wxMenuName");
                 $("#wxdjcd").text(name);
-            }else{
-                getWXCode();
             }
         }else{
-            base.getCompanyByUrl().then(function(res){
-                if(COMPANYCODE = sessionStorage.getItem("compCode")){
-                    addCompanyInfo(res.data);
-                    getCompMenuList();
-                    getWXCode()
-                        .then(function(){
-                            getBanner();
-                        });
-                }else{
-                    base.showMsg("非常抱歉，暂时无法获取公司信息!");
-                }
-            });
+            base.getCompanyByUrl(getMyCont);
+        }
+    }
+
+    function getMyCont(res){
+        if(COMPANYCODE = sessionStorage.getItem("compCode")){
+            base.addIcon();
+            addCompanyInfo(res.data);
+            getCompMenuList();
+            getWXCode()
+                .then(function(){
+                    getBanner();
+                });
+        }else{
+            base.showMsg("非常抱歉，暂时无法获取公司信息!");
         }
     }
 
@@ -50,11 +52,36 @@ define([
     }
 
     function getCompMenuList(){
-        base.getCompMenuList(COMPANYCODE)
+        base.getMenuList(COMPANYCODE)
             .then(function(res){
                 if(res.success){
-                    var list = res.data,
-                        html = '<a href="./adress.html" class="plr10 p_r b_e6_b show">公司简介<i class="r-tip"></i></a>';
+                    var data = res.data, cCode, menuArr = [];
+                    //menuArr按父子关系保存菜单数据
+					for(var j = 0, len = data.length; j < len; j++){
+						var dd = data[j], pc = dd.parentCode;
+						if(!pc || pc == "0"){
+                            if(!menuArr[dd.code]){
+                                menuArr[dd.code] = [];
+                            }
+                            //是微信顶级菜单
+                            if(/^wei/.test(dd.code)){
+                                sessionStorage.setItem("wxMenuCode", dd.code)
+                                sessionStorage.setItem("wxMenuName", dd.name);
+                                $("#wxdjcd").text(dd.name);
+                            }else if(/^com/.test(dd.code)){
+                                cCode = dd.code;
+                            }
+						}else{
+                            if(!menuArr[pc]){
+                                menuArr[pc] = [];
+                                if(/^com/.test(pc)){
+                                    cCode = pc;
+                                }
+                            }
+                            menuArr[pc].push(dd);
+						}
+					}
+                    var list = menuArr[cCode];
                     for(var i = 0; i < list.length; i++){
                         var ll = list[i];
                         if(ll.contentType == "ele"){
@@ -75,21 +102,12 @@ define([
                 if(res.success){
                     var data = res.data, html = "";
                     for(var i = 0; i < data.length; i++){
-                        html += '<div class="swiper-slide"><img src="'+data[i].url+'"></div>';
+                        html += '<div class="swiper-slide"><img class="wp100 hp100" src="'+data[i].pic+'"></div>';
                     }
                     $("#swr").html(html);
                     swiperImg();
                 }
                 $(".icon-loading").remove();
-            });
-    }
-    function getWXCode(){
-        base.getWXMenuCode(COMPANYCODE)
-            .then(function(){
-                var code, name;
-                sessionStorage.setItem("wxMenuCode", data[0].code)
-                sessionStorage.setItem("wxMenuName", data[0].name);
-                $("#wxdjcd").text(data[0].name);
             });
     }
     function swiperImg(){

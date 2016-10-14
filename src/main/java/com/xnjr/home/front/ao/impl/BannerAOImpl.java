@@ -18,7 +18,7 @@ public class BannerAOImpl implements IBannerAO {
 		req.setCompanyCode(companyCode);
 		req.setLocation(location);
 		req.setName(name);
-		req.setStatus(status);
+		req.setStatus("1");
 		req.setUpdater(updater);
 		return BizConnecter.getBizData("806051", JsonUtils.object2Json(req),
 	            Object.class);

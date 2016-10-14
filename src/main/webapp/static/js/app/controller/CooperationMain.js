@@ -3,24 +3,33 @@ define([
     'app/util/ajax',
     'app/util/dialog'
 ], function (base, Ajax, dialog) {
-	var COMPANYCODE;
+	var COMPANYCODE, wxMenuCode = "", wxMenuName = "";
 	init();
 
 	function init(){
 		if(COMPANYCODE = sessionStorage.getItem("compCode")){
+			base.addIcon();
+			if(wxMenuCode = sessionStorage.getItem("wxMenuCode")){
+                wxMenuName = sessionStorage.getItem("wxMenuName");
+                $("#wxdjcd").text(wxMenuName);
+            }else{
+                getWXCode();
+            }
             getCompany();
-			getWXCode();
 		}else{
-			base.getCompanyByUrl().then(function(res){
-                if(COMPANYCODE = sessionStorage.getItem("compCode")){
-                    addCompanyInfo(res.data);
-                    getWXCode();
-                }else{
-                    base.showMsg("非常抱歉，暂时无法获取公司信息!");
-                }
-            });
+			base.getCompanyByUrl(getMyCont);
 		}
 		addListeners();
+	}
+
+	function getMyCont(res){
+		if(COMPANYCODE = sessionStorage.getItem("compCode")){
+			base.addIcon();
+			addCompanyInfo(res.data);
+			getWXCode();
+		}else{
+			base.showMsg("非常抱歉，暂时无法获取公司信息!");
+		}
 	}
 
 	function getCompany(){
@@ -32,6 +41,7 @@ define([
 
 	function addCompanyInfo(res){
 		if(res.success){
+			getBanner();
 			var data = res.data;
 			$("#qrCode").html('<img class="wp40" src="'+data.qrCode+'">')
 		}else{
@@ -40,14 +50,22 @@ define([
 	}
 
 	function getWXCode(){
-        base.getWXMenuCode(COMPANYCODE)
-            .then(function(){
-                var code, name;
-                sessionStorage.setItem("wxMenuCode", data[0].code)
-                sessionStorage.setItem("wxMenuName", data[0].name);
-                $("#wxdjcd").text(data[0].name);
-            });
-    }
+		return base.getMenuList(COMPANYCODE)
+			.then(function(res){
+				if(res.success){
+					var list = res.data;
+					for(var i = 0; i < list.length; i++){
+						if(/^wei/.test(list[i].code)){
+							wxMenuCode = list[i].code;
+							wxMenuName = list[i].name;
+							sessionStorage.setItem("wxMenuCode", wxMenuCode)
+							sessionStorage.setItem("wxMenuName", wxMenuName);
+							$("#wxdjcd").text(wxMenuName);
+						}
+					}
+				}
+			});
+	}
 
 	function addListeners(){
 		$("#footDiv").on("click", "a", function(e){
@@ -64,5 +82,31 @@ define([
     		location.href = "./cooperation.html";
     	});
 	}
+
+	function getBanner(){
+        base.getBanner(COMPANYCODE, 5)
+            .then(function(res){
+                if(res.success){
+                    var data = res.data, html = "";
+                    for(var i = 0; i < data.length; i++){
+                        html += '<div class="swiper-slide"><img class="wp100" src="'+data[i].pic+'"></div>';
+                    }
+                    $("#swr").html(html);
+                    swiperImg();
+                }
+                $(".icon-loading").remove();
+            });
+    }
+    
+    function swiperImg(){
+        var mySwiper = new Swiper ('.swiper-container', {
+            direction: 'horizontal',
+            loop: true,
+            autoplay: 2000,
+            autoplayDisableOnInteraction: false,
+            // 如果需要分页器
+            pagination: '.swiper-pagination'
+        });
+    }
     	
 });

@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.xnjr.home.front.session.ISessionProvider;
-import com.xnjr.home.front.session.SessionUser;
 //import com.xnjr.moom.front.util.ConfigProperties;
 
 /**
@@ -21,7 +20,7 @@ import com.xnjr.home.front.session.SessionUser;
 @Controller
 public class PageController {
 
-    private static final String SESSION_KEY_USER = "user";
+    //private static final String SESSION_KEY_USER = "user";
 
     @Autowired
     protected ISessionProvider sessionProvider;

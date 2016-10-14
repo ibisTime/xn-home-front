@@ -12,12 +12,11 @@ import com.xnjr.home.front.req.XN806111Req;
 public class ContentAOImpl implements IContentAO {
 
     @Override
-    public Object doGetAContentPage(String kind, String type, String title,
+    public Object doGetAContentPage(String kind, String title,
             String menuCode, String start, String limit) {
         XN806110Req req = new XN806110Req();
         req.setKind(kind);
         req.setTitle(title);
-        req.setType(type);
         req.setLimit(limit);
         req.setStart(start);
         req.setMenuCode(menuCode);
@@ -25,12 +24,11 @@ public class ContentAOImpl implements IContentAO {
             Object.class);
     }
 
-    public Object doGetAContentList(String kind, String type, String title,
+    public Object doGetAContentList(String kind, String title,
             String menuCode) {
         XN806111Req req = new XN806111Req();
         req.setKind(kind);
         req.setTitle(title);
-        req.setType(type);
         req.setMenuCode(menuCode);
         return BizConnecter.getBizData("806111", JsonUtils.object2Json(req),
             Object.class);

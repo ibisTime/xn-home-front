@@ -7,6 +7,7 @@ define([
     init();
     function init(){
         if(COMPANYCODE = sessionStorage.getItem("compCode")){
+            base.addIcon();
             if(sessionStorage.getItem("wxMenuCode")){
                 var name = sessionStorage.getItem("wxMenuName");
                 $("#wxdjcd").text(name);
@@ -15,13 +16,15 @@ define([
                 getWXCodeAndBanner();
             }
         }else{
-            base.getCompanyByUrl().then(function(){
-                if(COMPANYCODE = sessionStorage.getItem("compCode")){
-                    getWXCodeAndBanner();
-                }else{
-                    base.showMsg("非常抱歉，暂时无法获取公司信息!");
-                }
-            });
+            base.getCompanyByUrl()
+                .then(function(){
+                    if(COMPANYCODE = sessionStorage.getItem("compCode")){
+                        base.addIcon();
+                        getWXCodeAndBanner();
+                    }else{
+                        base.showMsg("非常抱歉，暂时无法获取公司信息!");
+                    }
+                });
         }
     }
     function getBanner(){
@@ -30,7 +33,7 @@ define([
                 if(res.success){
                     var data = res.data, html = "";
                     for(var i = 0; i < data.length; i++){
-                        html += '<div class="swiper-slide"><img class="backa" src="'+data[i].url+'"></div>';
+                        html += '<div class="swiper-slide"><img class="wp100 hp100" src="'+data[i].pic+'"></div>';
                     }
                     $("#swr").html(html);
                     swiperImg();
@@ -39,12 +42,18 @@ define([
             });
     }
     function getWXCode(){
-        base.getWXMenuCode(COMPANYCODE)
-            .then(function(){
-                var code, name;
-                sessionStorage.setItem("wxMenuCode", data[0].code)
-                sessionStorage.setItem("wxMenuName", data[0].name);
-                $("#wxdjcd").text(data[0].name);
+        base.getMenuList(COMPANYCODE)
+            .then(function(res){
+                if(res.success){
+                    var list = res.data;
+                    for(var i = 0; i < list.length; i++){
+                        if(/^wei/.test(list[i].code)){
+                            sessionStorage.setItem("wxMenuCode", list[i].code)
+                            sessionStorage.setItem("wxMenuName", list[i].name);
+                            $("#wxdjcd").text(list[i].name);
+                        }
+                    }
+                }
             });
     }
     function getWXCodeAndBanner(){

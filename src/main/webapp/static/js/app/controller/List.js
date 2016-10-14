@@ -4,10 +4,30 @@ define([
 ], function (base, Ajax) {
     var start = 1, limit = 10, isEnd = false,
         canScrolling = false, first = true,
-        code = base.getUrlParam("code");
+        code = base.getUrlParam("code"),
+        COMPANYCODE, wxMenuCode = "", wxMenuName = "";
     init();
     function init(){
         getContentPage();
+        if(COMPANYCODE = sessionStorage.getItem("compCode")){
+            base.addIcon();
+            if(wxMenuCode = sessionStorage.getItem("wxMenuCode")){
+                wxMenuName = sessionStorage.getItem("wxMenuName");
+                $("#wxdjcd").text(wxMenuName);
+            }else{
+                getWXCode();
+            }
+        }else{
+             base.getCompanyByUrl()
+                .then(function(){
+                    if(COMPANYCODE = sessionStorage.getItem("compCode")){
+                        base.addIcon();
+                        getWXCode();
+                    }else{
+                        base.showMsg("非常抱歉，暂时无法获取公司信息!");
+                    }
+                });
+        }
         addListeners();
     }
 
@@ -36,7 +56,7 @@ define([
                             if(ll.url){
                                 html += '<a href="'+ll.url+'">'
                                             '<div class="plr12 ptb10 clearfix">'+
-                                                '<div class="fl wp30 tl"><img class="max-hp100p" src="'+ll.picture1+'"/></div>'+
+                                                '<div class="fl wp30 tl"><img class="max-hp100p" src="'+ll.pic1+'"/></div>'+
                                                 '<div class="fl wp55 plr6">'+ll.title+'</div>'+
                                                 '<div class="fl wp15 s_10">'+ll.endNote+'</div>'+
                                             '</div>'+
@@ -44,7 +64,7 @@ define([
                             }else{
                                 html += '<a href="'+ll.endNote+'">'
                                             '<div class="plr12 ptb10 clearfix">'+
-                                                '<div class="fl wp30 tl"><img class="max-hp100p" src="'+ll.picture1+'"/></div>'+
+                                                '<div class="fl wp30 tl"><img class="max-hp100p" src="'+ll.pic1+'"/></div>'+
                                                 '<div class="fl wp55 plr6">'+ll.title+'</div>'+
                                             '</div>'+
                                         '</a></li>';
@@ -52,7 +72,7 @@ define([
                         }else{
                             html += '<a href="../custom/content.html?code='+ll.code+'">'
                                         '<div class="plr12 ptb10 clearfix">'+
-                                            '<div class="fl wp30 tl"><img class="max-hp100p" src="'+ll.picture1+'"/></div>'+
+                                            '<div class="fl wp30 tl"><img class="max-hp100p" src="'+ll.pic1+'"/></div>'+
                                             '<div class="fl wp55 plr6">'+ll.title+'</div>'+
                                             '<div class="fl wp15 s_10">'+ll.endNote+'</div>'+
                                         '</div>'+
@@ -69,5 +89,22 @@ define([
                     }
                 }
             })
+    }
+    function getWXCode(){
+        return base.getMenuList(COMPANYCODE)
+            .then(function(res){
+                if(res.success){
+                    var list = res.data;
+                    for(var i = 0; i < list.length; i++){
+                        if(/^wei/.test(list[i].code)){
+                            wxMenuCode = list[i].code;
+                            wxMenuName = list[i].name;
+                            sessionStorage.setItem("wxMenuCode", wxMenuCode)
+                            sessionStorage.setItem("wxMenuName", wxMenuName);
+                            $("#wxdjcd").text(wxMenuName);
+                        }
+                    }
+                }
+            });
     }
 });

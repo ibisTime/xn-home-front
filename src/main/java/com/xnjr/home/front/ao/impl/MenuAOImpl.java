@@ -22,6 +22,8 @@ public class MenuAOImpl implements IMenuAO {
         req.setLocation(location);
         req.setCompanyCode(companyCode);
         req.setContentType(contentType);
+        req.setStatus("1");
+        req.setParentCode("");
         return BizConnecter.getBizData("806091", JsonUtils.object2Json(req),
             Object.class);
     }

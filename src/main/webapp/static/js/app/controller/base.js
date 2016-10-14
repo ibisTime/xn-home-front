@@ -159,7 +159,7 @@ define([
         getCompany: function(code){
             return Ajax.get(APIURL + '/company/info', {"companyCode": code}, true);
         },
-        getCompanyByUrl: function(){
+        getCompanyByUrl: function(func){
             var url = location.href;
             var idx = url.indexOf("/m/");
             if(idx != -1){
@@ -169,23 +169,14 @@ define([
                 .then(function (res) {
                     if (res.success) {
                         sessionStorage.setItem("compCode", res.data.code);
+                        sessionStorage.setItem("icon", res.data.icon);
                     }
+                    func && func(res);
                 });
         },
-        getWXMenuCode: function (code){
+        getMenuList: function (code){
             return Ajax.get(APIURL + '/company/menu/list', 
-                {"companyCode": code, "location": 2}, true)
-                .then(function (res) {
-                    if (res.success) {
-                        var data = res.data;
-                        sessionStorage.setItem("wxMenuCode", data[0].code);
-                        sessionStorage.setItem("wxMenuName", data[0].name);
-                    }
-                });
-        },
-        getCompMenuList: function (code){
-            return Ajax.get(APIURL + '/company/menu/list', 
-                {"companyCode": code, "location": 3}, true);
+                {"companyCode": code}, true);
         },
         getBanner: function (code, location){
             return Ajax.get(APIURL + '/company/banner/list',
@@ -200,6 +191,9 @@ define([
         },
         getContentList: function(code){
             return Ajax.get(APIURL + '/company/acontent/list', {"menuCode": code}, true);
+        },
+        addIcon: function(){
+            $("head").append('<link rel="shortcut icon" type="image/ico" href="'+sessionStorage.getItem("icon")+'">');
         }
 };
     return Base;

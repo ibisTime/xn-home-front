@@ -4,9 +4,9 @@ define([
 ], function(base, ajax) {
     var dict = {
         contentSource: {
-        	"default" : "/company/acontent/page",
-        	"list": "/company/acontent/list",
-        	"company": "/company/info"
+        	"list" : "/company/acontent/page",
+        	"ele": "/company/acontent/list",
+            "info": "/company/acontent"
         },
         companyTmpl: "company.handlebars",
         limit: "5"

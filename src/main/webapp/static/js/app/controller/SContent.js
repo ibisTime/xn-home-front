@@ -1,11 +1,11 @@
 define([
     'app/controller/base',
-    'app/util/ajax',
-    'lib/swiper-3.3.1.jquery.min'
-], function (base, Ajax, Swiper) {
+    'app/util/ajax'
+], function (base, Ajax) {
     var code = base.getUrlParam("code");
 
     function init(){
+        base.addIcon();
         getContent();
     }
 

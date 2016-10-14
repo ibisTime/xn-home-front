@@ -2,14 +2,30 @@ package com.xnjr.home.front.req;
 
 public class XN806091Req {
 	//名称
-	public String name;
-	//模版编号
-	public String location;
+	private String name;
+	//UI位置
+	private String location;
+	//状态0 下架  1 上架
+	private String status;
+	//父菜单
+	private String parentCode;
 	//内容源获取方式
-	public String contentType;
+	private String contentType;
 	//公司编号
-	public String companyCode;
+	private String companyCode;
 	
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public String getParentCode() {
+		return parentCode;
+	}
+	public void setParentCode(String parentCode) {
+		this.parentCode = parentCode;
+	}
 	public String getName() {
 		return name;
 	}

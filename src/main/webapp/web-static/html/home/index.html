@@ -2,355 +2,7 @@
 <html lang="zh-CN">
 <head>
 	<link rel="import" href="../head.html?__inline"/>
-    <title>浙江诚晟实业发展有限公司</title>
-    <style>
-        .index-container{
-            width: 100%;
-            margin: 0;
-        }
-        .fl{
-            float: left;
-        }
-        .fr{
-            float: right;
-        }
-        .f26p {
-            font-size: 26px;
-        }
-        .c_30_56_123{
-            color: rgb(30, 56, 123);
-        }
-        .f22p{
-            font-size: 22px;
-        }
-        .c_216{
-            color: rgb(216, 216, 216);
-        }
-        .p5{
-            padding: 5px;
-        }
-        img{
-            max-width: 100%;
-        }
-        .cursor_p{
-            cursor: pointer;
-        }
-        .cursor_d{
-            cursor: default !important;
-        }
-        
-        a:visited {
-            color: #666;
-        }
-        a {
-            color: #666;
-            text-decoration: none;
-        }
-        .fixedDiv{
-            width: 100px;
-            border: 1px solid #e6e6e6;
-            border-bottom: none;
-            position: fixed;
-            bottom: 400px;
-            right: 20px;
-            font-size: 13px;
-            background-color: #fff;
-            z-index: 99;
-            border-radius: 10px;
-            box-shadow: 0 2px 6px #d1d1d1;
-        }
-        .fixedDiv div{
-            border-bottom: 1px solid #e6e6e6;
-            text-align: center;
-        }
-        .fixedDiv .ztsq-t{
-            height: 32px;
-            line-height: 32px;
-            background: url(../../images/apply.png) center no-repeat;
-        }
-        .fixedDiv .gcsq-d, .fixedDiv .hzsq-d{
-            height: 36px;
-            font-size: 16px;
-            line-height: 36px;
-        }
-        .fixedDiv .hzsq-d {
-            border-bottom: none;
-        }
-        a{
-            cursor: pointer;
-        }
-        .ti2{
-            text-indent: 2em;
-        }
-        .mr10{
-            margin-right: 10px;
-        }
-        .mask{
-            display: block;
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: #000;
-            opacity: .618;
-            filter: alpha(opacity=61.8);
-        }
-
-        .register_wrapper {
-            background: url(../../images/con-bg.jpg) repeat-x;
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            z-index: 999;
-        }
-        .register_dialog {
-            display: block;
-            background: url(../../images/dialog-gray-bg.png) #fff bottom repeat-x;
-            border-radius: 12px;
-            -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.05),0 5px 5px rgba(0,0,0,.08),0 7px 10px rgba(0,0,0,.09),0 22px 22px rgba(0,0,0,.05);
-            -moz-box-shadow: 0 5px 10px rgba(0,0,0,.05),0 5px 5px rgba(0,0,0,.08),0 7px 10px rgba(0,0,0,.09),0 22px 22px rgba(0,0,0,.05);
-            box-shadow: 0 5px 10px rgba(0,0,0,.05),0 5px 5px rgba(0,0,0,.08),0 7px 10px rgba(0,0,0,.09),0 22px 22px rgba(0,0,0,.05);
-            margin: -287.5px 0 0 -190px;
-            width: 380px;
-            position: fixed;
-            left: 50%;
-            top: 50%;
-        }
-        .register_title {
-            background: url(../../images/dialog-radius-top-bg.png) repeat-x;
-            border-radius: 13px 13px 0 0;
-            height: 69px;
-            overflow: hidden;
-        }
-        .register_title h4 {
-            border-bottom: #d1d1d1 solid 1px;
-            box-shadow: 0 2px 6px #d1d1d1;
-            color: #666;
-            font-size: 20px;
-            height: 61px;
-            line-height: 61px;
-            padding: 0 0 0 35px;
-            display: block;
-        }
-        .register_content {
-            padding: 30px 30px 15px;
-        }
-        .register_content .common-form li {
-            clear: both;
-            margin: 1px 1px 12px;
-            position: relative;
-        }
-        .register_input {
-            background: url(../../images/input-bg.png) #f9f9f9 repeat-x;
-            border: #ccc solid 1px;
-            border-radius: 10px;
-            font-size: 18px;
-            height: 48px;
-            line-height: 48px;
-            opacity: .618;
-            position: relative;
-            transition: opacity .3s ease-in;
-            -moz-transition: opacity .3s ease-in;
-            -webkit-transition: opacity .3s ease-in;
-            -o-transition: opacity .3s ease-in;
-        }
-        .register_username .ccc {
-            display: inline-block;
-            width: 55px;
-            text-align: center;
-            position: relative;
-            left: 3px;
-        }
-        .ccc:before {
-            content: "+";
-            position: relative;
-            top: -1px;
-        }
-        .register_username .register_placeholder {
-            left: 110px;
-            color: #bebebe;
-            float: left;
-            font-size: 18px;
-            position: absolute;
-            top: 0;
-        }
-        .register_input .register_placeholder {
-            color: #bebebe;
-            float: left;
-            font-size: 18px;
-            position: absolute;
-            left: 10px;
-            top: 0;
-        }
-        .register_username .register_placeholder {
-            display: block;
-        }
-        .register_mobile {
-            padding-left: 0;
-            padding-right: 0;
-            background: rgba(255,255,255,0);
-            background: url(../../images/blank.gif)\9;
-            border: 0;
-            color: #333;
-            font-size: 18px;
-            height: 34px;
-            padding: 0 15px;
-            width: 290px;
-            position: relative;
-            z-index: 10;
-        }
-        .register_input input {
-            background: rgba(255,255,255,0);
-            border: 0;
-            color: #333;
-            font-size: 18px;
-            height: 34px;
-            padding: 0;
-            width: 290px;
-            position: relative;
-            z-index: 10;
-            margin-left: 10px;
-        }
-
-        .login_input .warning, .register_input .warning {
-            background: #d16d62;
-            border-radius: 5px;
-            color: #fff;
-            display: none;
-            font-size: 12px;
-            font-weight: 400;
-            height: 24px;
-            line-height: 25px;
-            margin: 13px 0 0;
-            padding: 0 5px;
-            position: absolute;
-            right: 10px;
-            top: 0;
-            z-index: 10;
-        }
-        .register_input .register_icon {
-            background: url(../../images/dialog-input-icons-bg.png) repeat-x;
-            border-radius: 10px 0 0 10px;
-            border-right: #ccc solid 1px;
-            float: left;
-            height: 48px;
-            width: 48px;
-            overflow: hidden;
-        }
-        .register_input .register_icon i {
-            background: url(../../images/dialog-input-icons.png) no-repeat center;
-            cursor: pointer;
-            display: block;
-            height: 48px;
-            text-indent: -9999em;
-            width: 48px;
-        }
-        .register_verification .register_icon i {
-            background: url(../../images/captcha-icon.png) center no-repeat;
-        }
-        .register_content form .register_btn-wrapper {
-            margin: 25px 1px 0;
-            clear: both;
-        }
-        .register_content form .register_btn-wrapper .register_btn-primary {
-            background: #F0A32D;
-        }
-        .register_content form .register_btn-wrapper .register_btn {
-            border-radius: 9px;
-            clear: both;
-            cursor: pointer;
-            height: 48px;
-            line-height: 48px;
-            margin: 0px;
-            padding: 1px;
-            -webkit-touch-callout: none;
-            -moz-user-select: -moz-none;
-            -khtml-user-select: none;
-            -webkit-user-select: none;
-            -ms-user-select: none;
-            -o-user-select: none;
-            user-select: none;
-            text-align: center;
-            text-shadow: rgba(255,255,255,.496094) 0 1px 0;
-        }
-        .register_content form .register_btn-wrapper .register_btn-primary a {
-            background: #F0A32D;
-            color: #fff;
-            text-shadow: #4f70b3 0 -1px 0;
-        }
-        .register_content form .register_btn-wrapper .register_btn a {
-            border: 0;
-            border-radius: 9px;
-            cursor: pointer;
-            display: block;
-            font-size: 18px;
-        }
-        .register_content .common-form li .register_input:hover {
-            opacity: 1!important;
-        }
-        .register_title .close {
-            background: url(../../images/ui-p.png) no-repeat -20px -21px;
-            cursor: pointer;
-            height: 16px;
-            overflow: hidden;
-            opacity: .618;
-            width: 16px;
-            position: absolute;
-            right: 23px;
-            top: 23px;
-            -webkit-transition: all .3s linear;
-            -moz-transition: all .3s linear;
-            -o-transition: all .3s linear;
-            transition: all .3s linear;
-        }
-
-        .hidden{
-            display: none;
-        }
-        .mytextArea{
-            background: rgba(255,255,255,0);
-            border: 0;
-            color: #333;
-            font-size: 18px;
-            height: 62px;
-            width: 290px;
-            position: relative;
-            z-index: 10;
-            padding-top: 6px;
-            margin-left: 10px;
-        }
-        .area-warning{
-            bottom: 0;
-            top: inherit;
-        }
-        .mytextArea:focus{
-            outline: none;
-        }
-        .qrCode{
-            position: fixed;
-            width: 120px;
-            border: 1px solid #e6e6e6;
-            bottom: 300px;
-            right: 20px;
-            font-size: 13px;
-            background-color: #fff;
-            z-index: 99;
-            border-radius: 10px;
-            box-shadow: 0 2px 6px #d1d1d1;
-            bottom: 240px;
-            padding-top: 10px;
-            text-align: center;
-        }
-        .qrCode img{
-            width: 100px;
-            height: 100px;
-        }
-        .qrCode div{
-            line-height: 2em;
-        }
-    </style>
+    <title>首页</title>
 </head>
 <body>
     <div class="top" style="float: none;">
@@ -363,8 +15,7 @@
     <div class="wp100">
         <div class="swiper-container">
             <div class="swiper-wrapper" id="swr">
-                <div class="swiper-slide"><img class="wp100" src="../../images/about.jpg"></div>
-                <div class="swiper-slide"><img class="wp100" src="../../images/a2.jpg"></div>
+                <!--<div class="swiper-slide"><img class="wp100" src="../../images/about.jpg"></div>-->
             </div>
             <div class="swiper-pagination"></div>
         </div>
@@ -375,7 +26,7 @@
         <div class="hzsq-d"><a id="hzsq">合作申请</a></div>
     </div>
     <div class="tc qrCode">
-        <img src="../../images/about.jpg"/>
+        <img id="qrCode" class="cursor_p" src=""/>
         <div>扫一扫，微信洽谈</div>
     </div>
     <div id="mask" class="mask hidden"></div>
@@ -413,15 +64,6 @@
                             </div>
                         </li>
 
-                        <li class="register_verification">
-                            <div class="register_input" style="height: 70px;background-repeat: repeat-y;">
-                                <span class="register_placeholder">公司简介</span>
-                                <textarea id="hzjj" class="mytextArea"></textarea>
-                                <span class="warning area-warning">请输入公司简介</span>
-                                <span class="warning area-warning">公司简介过长</span>
-                            </div>
-                        </li>
-
                         <li class="register_password">
                             <div class="register_input" style="height: 70px;background-repeat: repeat-y;">
                                 <span class="register_placeholder">合作内容</span>
@@ -438,8 +80,9 @@
             </div>
         </div>
     </div>
-	<script src="../../../js/require.js"></script>
-	<script src="../../../js/lib/jquery-2.1.4.js"></script>
+    <div class="wp100 tc bigQrCode"><img id="bigQrCode" class="hidden" src="" /></div>
+	<script src="../../js/require.js"></script>
+	<script src="../../js/lib/jquery-2.1.4.js"></script>
 	<script>
 	    require(['app/controller/Index']);
 	</script>

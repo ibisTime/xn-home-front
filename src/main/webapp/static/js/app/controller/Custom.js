@@ -4,21 +4,24 @@ define([
     'lib/swiper-3.3.1.jquery.min'
 ], function (base, Ajax, Swiper) {
     var COMPANYCODE = "", wxMenuCode = "", wxMenuName = "";
-    var start = 1, limit = 10, isEnd = false, canScrolling = false, first = true;
+    var start = 1, limit = 10, isEnd = false,
+        canScrolling = false, first = true, contentType = "";
     init();
     function init(){
         if(COMPANYCODE = sessionStorage.getItem("compCode")){
+            base.addIcon();
             getMyContent();
         }else{
-            base.getCompanyByUrl().then(function(){
-                if(COMPANYCODE = sessionStorage.getItem("compCode")){
-                    getMyContent();
-                }else{
-                    base.showMsg("非常抱歉，暂时无法获取公司信息!");
-                }
-            });
+            base.getCompanyByUrl()
+                .then(function(){
+                    if(COMPANYCODE = sessionStorage.getItem("compCode")){
+                        base.addIcon();
+                        getMyContent();
+                    }else{
+                        base.showMsg("非常抱歉，暂时无法获取公司信息!");
+                    }
+                });
         }
-        addListeners();
     }
 
     function addListeners(){
@@ -31,28 +34,59 @@ define([
     }
 
     function getMyContent(){
-        if(wxMenuCode = sessionStorage.getItem("wxMenuCode")){
-            wxMenuName = sessionStorage.getItem("wxMenuName");
-            $("#wxdjcd").text(wxMenuName);
-            getContentPage();
-            getBanner();
-        }else{
-            getWXCode().then(function(){
-                getContentPage();
-                getBanner();
+        getWXCode()
+            .then(function(){
+                if(contentType == "list"){
+                    getContent();
+                    getContentPage();
+                    addListeners();
+                }else{
+                    $("#customDiv").addClass("hidden");
+                }
             });
+        if(wxMenuCode = sessionStorage.getItem("wxMenuCode")){
+            getBanner();
         }
     }
 
+    function getContent(){
+        base.getContentList(code)
+            .then(function(res){
+                if(res.success){
+                    var data = res.data[0];
+                    $("#title").text(data.title);
+                    var pic = data.picture2;
+                    if(isPicture(pic)){
+                        $("#img").html('<img class="wp100" src="'+pic+'">');
+                    }else{
+                        $("#bg-video").removeClass("hidden")
+                            .html('<source src="'+pic+'" type="video/mp4">'+
+                                    '<source src="'+pic+'" type="video/WebM">'+
+                                    '<source src="'+pic+'" type="video/Ogg">');
+                    }
+                    $("#description").html(data.description);
+                }else{
+                    base.showMsg("非常抱歉，暂时无法获取相关内容!");
+                }
+            });
+    }
+
     function getWXCode(){
-        return base.getWXMenuCode(COMPANYCODE)
-            .then(function(){
-                var code, name;
-                wxMenuCode = data[0].code;
-                wxMenuName = data[0].name;
-                sessionStorage.setItem("wxMenuCode", wxMenuCode)
-                sessionStorage.setItem("wxMenuName", wxMenuName);
-                $("#wxdjcd").text(wxMenuName);
+        return base.getMenuList(COMPANYCODE)
+            .then(function(res){
+                if(res.success){
+                    var list = res.data;
+                    for(var i = 0; i < list.length; i++){
+                        if(/^wei/.test(list[i].code)){
+                            wxMenuCode = list[i].code;
+                            wxMenuName = list[i].name;
+                            sessionStorage.setItem("wxMenuCode", wxMenuCode)
+                            sessionStorage.setItem("wxMenuName", wxMenuName);
+                            $("#wxdjcd").text(wxMenuName);
+                            contentType = list[i].contentType;
+                        }
+                    }
+                }
             });
     }
     function getContentPage(){
@@ -78,7 +112,7 @@ define([
                         }else{
                             html += '<a class="re wp100" href="./content.html?code='+ll.code+'">';
                         }
-                        html += '<div><img class="p-pic" src="'+ll.picture1+'"/></div>'+
+                        html += '<div><img class="p-pic" src="'+ll.pic1+'"/></div>'+
                                         '</a>'+
                                     '</div>'+
                                     '<div class="mt14 t-3dot">'+ll.title+'</div>'+
@@ -97,12 +131,12 @@ define([
             })
     }
     function getBanner(){
-        base.getBanner(COMPANYCODE, 2)
+        base.getBanner(COMPANYCODE, 3)
             .then(function(res){
                 if(res.success){
                     var data = res.data, html = "";
                     for(var i = 0; i < data.length; i++){
-                        html += '<div class="swiper-slide"><img src="'+data[i].url+'"></div>';
+                        html += '<div class="swiper-slide"><img class="wp100" src="'+data[i].pic+'"></div>';
                     }
                     $("#swr").html(html);
                     swiperImg();

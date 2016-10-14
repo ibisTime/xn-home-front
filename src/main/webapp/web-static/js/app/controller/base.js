@@ -1,4 +1,8 @@
-define(['app/util/common'], function (common) {
+define([
+    'app/util/common',
+    'app/util/ajax',
+    'app/util/dialog'
+], function (common, Ajax, dialog) {
 
     //FastClick.attach(document.body);
 
@@ -161,7 +165,7 @@ define(['app/util/common'], function (common) {
         getCompany: function(code){
             return Ajax.get(APIURL + '/company/info', {"companyCode": code}, true);
         },
-        getCompanyByUrl: function(){
+        getCompanyByUrl: function(func){
             var url = location.href;
             var idx = url.indexOf("/w/");
             if(idx != -1){
@@ -171,7 +175,9 @@ define(['app/util/common'], function (common) {
                 .then(function (res) {
                     if (res.success) {
                         sessionStorage.setItem("compCode", res.data.code);
+                        sessionStorage.setItem("icon", res.data.icon);
                     }
+                    func && func(res);
                 });
         },
         getMenuList: function (code){
@@ -191,7 +197,10 @@ define(['app/util/common'], function (common) {
         },
         getContentList: function(code){
             return Ajax.get(APIURL + '/company/acontent/list', {"menuCode": code}, true);
+        },
+        addIcon: function(){
+            $("head").append('<link rel="shortcut icon" type="image/ico" href="'+sessionStorage.getItem("icon")+'">');
         }
-};
+    };
     return Base;
 });

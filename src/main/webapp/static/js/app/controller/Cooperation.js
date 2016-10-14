@@ -3,20 +3,30 @@ define([
     'app/util/ajax',
     'app/util/dialog'
 ], function (base, Ajax, dialog) {
-    var COMPANYCODE;
+    var COMPANYCODE, wxMenuCode = "", wxMenuName = "";
     init();
 
     function init(){
         if(COMPANYCODE = sessionStorage.getItem("compCode")){
+            base.addIcon();
+            if(wxMenuCode = sessionStorage.getItem("wxMenuCode")){
+                wxMenuName = sessionStorage.getItem("wxMenuName");
+                $("#wxdjcd").text(wxMenuName);
+            }else{
+                getWXCode();
+            }
             addListeners();
         }else{
-			base.getCompanyByUrl().then(function(res){
-                if(COMPANYCODE = sessionStorage.getItem("compCode")){
-                    addListeners();
-                }else{
-                    base.showMsg("非常抱歉，暂时无法获取公司信息!");
-                }
-            });
+			base.getCompanyByUrl(getMyCont)
+                .then(function(){
+                    if(COMPANYCODE = sessionStorage.getItem("compCode")){
+                        base.addIcon();
+                        getWXCode();
+                        addListeners();
+                    }else{
+                        base.showMsg("非常抱歉，暂时无法获取公司信息!");
+                    }
+                });
 		}
     }
     function addListeners(){
@@ -75,10 +85,31 @@ define([
             })
             .then(function (res) {
                 if(res.success){
-                    location.href = './submit_success.html';
+                    base.showMsg("提交成功!");
+                    $("#remark").val("");
+                    $("#telephone").val("");
+                    $("#person").val("");
+                    $("#compName").val("");
                 }else{
                     $(".icon-loading").remove();
                     base.showMsg("非常抱歉，提交失败!")
+                }
+            });
+    }
+    function getWXCode(){
+        return base.getMenuList(COMPANYCODE)
+            .then(function(res){
+                if(res.success){
+                    var list = res.data;
+                    for(var i = 0; i < list.length; i++){
+                        if(/^wei/.test(list[i].code)){
+                            wxMenuCode = list[i].code;
+                            wxMenuName = list[i].name;
+                            sessionStorage.setItem("wxMenuCode", wxMenuCode)
+                            sessionStorage.setItem("wxMenuName", wxMenuName);
+                            $("#wxdjcd").text(wxMenuName);
+                        }
+                    }
                 }
             });
     }

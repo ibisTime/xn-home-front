@@ -1,7 +1,5 @@
 package com.xnjr.home.front.ao;
 
-import com.xnjr.home.front.res.XN704004Res;
-
 public interface ICompanyAO {
     /**
      * 获取公司信息

@@ -60,7 +60,7 @@ public class BizConnecter {
 
     private static String getPostUrl(String code) {
         String reqUrl = POST_URL;
-        if (code.contains("704")) {
+        if (code.contains("806")) {
             reqUrl = ACCOUNT_URL;
         } else {
             reqUrl = POST_URL;

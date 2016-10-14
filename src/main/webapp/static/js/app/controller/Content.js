@@ -8,6 +8,7 @@ define([
         var code = base.getUrlParam("code");
 
         function init(){
+            base.addIcon();
             getContent();
         }
 
