@@ -1,7 +1,8 @@
 define([
     'app/controller/base',
-    'app/util/ajax'
-], function (base, Ajax) {
+    'app/util/ajax',
+    'lib/swiper-3.3.1.jquery.min'
+], function (base, Ajax, Swiper) {
     var COMPANYCODE = "";
     init();
     function init(){
@@ -26,9 +27,9 @@ define([
             base.addIcon();
             addCompanyInfo(res.data);
             getCompMenuList();
-            getWXCode()
+            getBanner()
                 .then(function(){
-                    getBanner();
+                    getWXCode();
                 });
         }else{
             base.showMsg("非常抱歉，暂时无法获取公司信息!");
@@ -36,7 +37,7 @@ define([
     }
 
     function getCompany(){
-        return base.getCompany()
+        return base.getCompany(COMPANYCODE)
             .then(function(res){
                 if(res.success){
                     addCompanyInfo(res.data);
@@ -48,14 +49,15 @@ define([
 
     function addCompanyInfo(data){
         $("#logo").html('<img class="wp200p" src="'+data.logo+'"/>');
+        $("#comName").text(data.name);
         $("#slogan").text(data.slogan);
     }
 
     function getCompMenuList(){
-        base.getMenuList(COMPANYCODE)
+        return base.getMenuList(COMPANYCODE)
             .then(function(res){
                 if(res.success){
-                    var data = res.data, cCode, menuArr = [];
+                    var data = res.data, cCode, menuArr = {};
                     //menuArr按父子关系保存菜单数据
 					for(var j = 0, len = data.length; j < len; j++){
 						var dd = data[j], pc = dd.parentCode;
@@ -81,7 +83,7 @@ define([
                             menuArr[pc].push(dd);
 						}
 					}
-                    var list = menuArr[cCode];
+                    var list = menuArr[cCode], html = '<a href="./address.html" class="plr10 p_r b_e6_b show">公司简介<i class="r-tip"></i></a>';
                     for(var i = 0; i < list.length; i++){
                         var ll = list[i];
                         if(ll.contentType == "ele"){
@@ -90,6 +92,7 @@ define([
                             html += '<a href="./list.html?code='+ll.code+'" class="plr10 p_r b_e6_b show">'+ll.name+'<i class="r-tip"></i></a>';
                         }
                     }
+                    $("#menuList").html(html);
                 }else{
                     base.showMsg("非常抱歉，暂时无法获取公司信息!")
                 }
@@ -97,7 +100,7 @@ define([
     }
 
     function getBanner(){
-        base.getBanner(COMPANYCODE, 4)
+        return base.getBanner(COMPANYCODE, 4)
             .then(function(res){
                 if(res.success){
                     var data = res.data, html = "";
@@ -113,7 +116,6 @@ define([
     function swiperImg(){
         var mySwiper = new Swiper ('.swiper-container', {
             direction: 'horizontal',
-            loop: true,
             autoplay: 2000,
             autoplayDisableOnInteraction: false,
             // 如果需要分页器

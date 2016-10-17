@@ -173,7 +173,7 @@ define([
             }
             return Ajax.get(APIURL + '/company/byUrl', {"url": url}, true)
                 .then(function (res) {
-                    if (res.success) {
+                    if (res.success && !$.isEmptyObject(res.data)) {
                         sessionStorage.setItem("compCode", res.data.code);
                         sessionStorage.setItem("icon", res.data.icon);
                     }

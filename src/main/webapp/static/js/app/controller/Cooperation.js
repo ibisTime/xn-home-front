@@ -84,6 +84,7 @@ define([
                 "companyCode": COMPANYCODE
             })
             .then(function (res) {
+                $(".icon-loading").remove();
                 if(res.success){
                     base.showMsg("提交成功!");
                     $("#remark").val("");
@@ -91,7 +92,6 @@ define([
                     $("#person").val("");
                     $("#compName").val("");
                 }else{
-                    $(".icon-loading").remove();
                     base.showMsg("非常抱歉，提交失败!")
                 }
             });

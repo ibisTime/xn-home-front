@@ -6,7 +6,7 @@ define([
     $(function () {
 
         var code = base.getUrlParam("code");
-
+        init();
         function init(){
             base.addIcon();
             getContent();
@@ -18,7 +18,7 @@ define([
                     if(res.success){
                         var data = res.data;
                         $("#title").text(data.title);
-                        var pic = data.picture2;
+                        var pic = data.pic2;
                         if(isPicture(pic)){
                             $("#img").html('<img class="wp100" src="'+pic+'">');
                         }else{

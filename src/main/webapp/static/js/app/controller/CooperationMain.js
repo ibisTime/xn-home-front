@@ -1,8 +1,8 @@
 define([
     'app/controller/base',
     'app/util/ajax',
-    'app/util/dialog'
-], function (base, Ajax, dialog) {
+    'lib/swiper-3.3.1.jquery.min'
+], function (base, Ajax, Swiper) {
 	var COMPANYCODE, wxMenuCode = "", wxMenuName = "";
 	init();
 
@@ -101,7 +101,6 @@ define([
     function swiperImg(){
         var mySwiper = new Swiper ('.swiper-container', {
             direction: 'horizontal',
-            loop: true,
             autoplay: 2000,
             autoplayDisableOnInteraction: false,
             // 如果需要分页器

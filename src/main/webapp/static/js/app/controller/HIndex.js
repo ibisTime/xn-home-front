@@ -1,7 +1,7 @@
 define([
     'app/controller/base',
     'app/util/ajax',
-    'lib/swiper'
+    'lib/swiper-3.3.1.jquery.min'
 ], function (base, Ajax, Swiper) {
     var COMPANYCODE = "";
     init();
@@ -22,6 +22,7 @@ define([
                         base.addIcon();
                         getWXCodeAndBanner();
                     }else{
+                        $(".icon-loading").remove();
                         base.showMsg("非常抱歉，暂时无法获取公司信息!");
                     }
                 });
@@ -62,8 +63,11 @@ define([
     }
     
     function swiperImg(){
-        var mySwiper = new Swiper('.swiper-container', {
-            autoplay: 2000,//可选选项，自动滑动
+        var mySwiper = new Swiper ('.swiper-container', {
+            direction: 'horizontal',
+            autoplay: 2000,
+            autoplayDisableOnInteraction: false,
+            // 如果需要分页器
             pagination: '.swiper-pagination'
         });
     }

@@ -45,7 +45,7 @@ define([
                 var data = res.data;
                 $("#description").text(data.description);
                 addMap(data.longitude, data.latitude);
-                $("#brief").html('地址：'+data.address+'</br>电话：'+data.telephone+'</br>网址：'+data.url);
+                $("#brief").html('地址：'+data.province+" "+data.city+" "+data.area+" "+data.address+'</br>电话：'+data.mobile+'</br>网址：'+data.domain);
             }else{
                 doError();
             }

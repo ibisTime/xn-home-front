@@ -19,6 +19,7 @@ define([
                         getMyContent();
                     }else{
                         base.showMsg("非常抱歉，暂时无法获取公司信息!");
+                        $(".icon-loading").remove();
                     }
                 });
         }
@@ -36,26 +37,26 @@ define([
     function getMyContent(){
         getWXCode()
             .then(function(){
-                if(contentType == "list"){
-                    getContent();
-                    getContentPage();
-                    addListeners();
-                }else{
+                if(contentType == "ele"){
+                    getContent();                    
                     $("#customDiv").addClass("hidden");
+                    $("#eleCont").removeClass("hidden");
+                }else{
+                   getContentPage();
+                   addListeners(); 
                 }
             });
-        if(wxMenuCode = sessionStorage.getItem("wxMenuCode")){
-            getBanner();
-        }
+        getBanner();        
     }
 
     function getContent(){
-        base.getContentList(code)
+        base.getContentList(wxMenuCode)
             .then(function(res){
+                $(".icon-loading").remove();
                 if(res.success){
                     var data = res.data[0];
                     $("#title").text(data.title);
-                    var pic = data.picture2;
+                    var pic = data.pic2;
                     if(isPicture(pic)){
                         $("#img").html('<img class="wp100" src="'+pic+'">');
                     }else{
@@ -92,9 +93,10 @@ define([
     function getContentPage(){
         base.getContentPage(wxMenuCode, start, limit)
             .then(function(res){
+                $(".icon-loading").addClass("hidden");
                 if(res.success){
                     var list = res.data.list, html = "",
-                        totalCount = +data.totalCount;
+                        totalCount = +res.data.totalCount;
                     if(totalCount <= limit || list.length < limit){
                         isEnd = true;
                     }
@@ -148,11 +150,18 @@ define([
     function swiperImg(){
         var mySwiper = new Swiper ('.swiper-container', {
             direction: 'horizontal',
-            loop: true,
             autoplay: 2000,
             autoplayDisableOnInteraction: false,
             // 如果需要分页器
             pagination: '.swiper-pagination'
         });
+    }
+    function isPicture(url){
+        var ext = url.substring(url.lastIndexOf("."), url.length).toUpperCase();
+        if(ext!=".BMP" && ext != ".PNG" && ext != ".GIF" && ext != ".JPG" && ext != ".JPEG"){
+            return false;
+        }else{
+            return true;
+        }
     }
 });

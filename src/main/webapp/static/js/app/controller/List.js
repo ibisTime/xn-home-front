@@ -45,7 +45,7 @@ define([
             .then(function(res){
                 if(res.success){
                     var list = res.data.list, html = "",
-                        totalCount = +data.totalCount;
+                        totalCount = +res.data.totalCount;
                     if(totalCount <= limit || list.length < limit){
                         isEnd = true;
                     }
@@ -54,15 +54,15 @@ define([
                         html += '<li class="wp100 b_e6_b">';
                         if(ll.type == "0" || ll.url){
                             if(ll.url){
-                                html += '<a href="'+ll.url+'">'
+                                html += '<a class="show" href="'+ll.url+'">'
                                             '<div class="plr12 ptb10 clearfix">'+
                                                 '<div class="fl wp30 tl"><img class="max-hp100p" src="'+ll.pic1+'"/></div>'+
                                                 '<div class="fl wp55 plr6">'+ll.title+'</div>'+
-                                                '<div class="fl wp15 s_10">'+ll.endNote+'</div>'+
+                                                '<div class="fl wp15 s_10 tr">'+ll.endNote+'</div>'+
                                             '</div>'+
                                         '</a></li>';
                             }else{
-                                html += '<a href="'+ll.endNote+'">'
+                                html += '<a class="show" href="'+ll.endNote+'">'+
                                             '<div class="plr12 ptb10 clearfix">'+
                                                 '<div class="fl wp30 tl"><img class="max-hp100p" src="'+ll.pic1+'"/></div>'+
                                                 '<div class="fl wp55 plr6">'+ll.title+'</div>'+
@@ -70,15 +70,16 @@ define([
                                         '</a></li>';
                             }
                         }else{
-                            html += '<a href="../custom/content.html?code='+ll.code+'">'
+                            html += '<a class="show" href="../custom/content.html?code='+ll.code+'">'+
                                         '<div class="plr12 ptb10 clearfix">'+
                                             '<div class="fl wp30 tl"><img class="max-hp100p" src="'+ll.pic1+'"/></div>'+
                                             '<div class="fl wp55 plr6">'+ll.title+'</div>'+
-                                            '<div class="fl wp15 s_10">'+ll.endNote+'</div>'+
+                                            '<div class="fl wp15 s_10 tr">'+ll.endNote+'</div>'+
                                         '</div>'+
                                     '</a></li>';
                         }
                     }
+                    first && $(".icon-loading").remove();
                     $("#customUl").append(html);
                     start++;
                     first = false;
@@ -86,6 +87,7 @@ define([
                 }else{
                     if(first){
                         base.showMsg("非常抱歉，暂时无法获取数据!");
+                        $(".icon-loading").remove();
                     }
                 }
             })

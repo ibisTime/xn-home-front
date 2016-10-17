@@ -56,7 +56,7 @@ define([
 		if(res.success){
 			var data = res.data,
 				html = footTmpl(data);
-			$("#top-tel").text(data.telephone);
+			$("#top-tel").text(data.mobile);
 			$(".top .logo img").attr("src", data.logo);
 			$("#foot").replaceWith(html);
 		}else{
@@ -200,16 +200,13 @@ define([
 												'</a>'+
 											'</li>';
 							}
-							getContent();
-
-							if (history.pushState) {
-								history.replaceState(null, document.title, location.href.split("#")[0]+location.hash);
-							}
 						}
 					}else{
 						document.title = pMenu.name;
 						hasChildMenu = false;
 					}
+					getContent();
+					history.pushState && history.replaceState(null, document.title, location.href.split("#")[0]+location.hash);
 				}else{
 					if(/^ind/.test(pMenu.code)){
 						topHtml = '<li><a href="../home/index.html" class="wa time1">'+pMenu.name+'</a></li>' + topHtml;
@@ -248,8 +245,6 @@ define([
 				return;
 			}
 		}
-		//url = APIURL + source;
-		//config.menuCode = menuCode;
 		//列表数据
 		if(contentType == "list"){
 			config = {
@@ -425,7 +420,8 @@ define([
 		base.getCompany(COMPANYCODE)
 			.then(function(res){
 				if(res.success){
-					$("#n_right").html("<div class='r_nr'>"+
+					$("#n_right")
+						.html("<div class='r_nr'>"+
 									"<div id='addr'></div>"+
 									"<div id='allmap'></div>"+
 								"</div>"+
@@ -466,7 +462,7 @@ define([
 			html += "微信号：" + data.weChat + "<br/>";
 		}
 		if(data.qrCode){
-			html += '<img class="cp-barCode" src="'+data.qrCode+'"/>';
+			html += '<img class="cp-barCode cursor_p" src="'+data.qrCode+'"/>';
 			$("#bigQrCode").attr("src", data.qrCode);
 		}
 		html += '</p></div>';
@@ -478,7 +474,6 @@ define([
 		var point = new BMap.Point(longitude, latitude);
 		map.centerAndZoom(point, 14);  // 初始化地图,设置中心点坐标和地图级别
 		map.addControl(new BMap.MapTypeControl());   //添加地图类型控件
-		//map.setCurrentCity("");          // 设置地图显示的城市 此项是必须设置的
 		map.addControl(new BMap.NavigationControl());        // 添加平移缩放控件
 		map.addControl(new BMap.ScaleControl());             // 添加比例尺控件
 		var marker = new BMap.Marker(point);// 创建标注
