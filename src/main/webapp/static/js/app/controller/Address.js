@@ -43,7 +43,7 @@ define([
             $(".icon-loading").remove();
             if(res.success){
                 var data = res.data;
-                $("#description").text(data.description);
+                $("#description").html(data.description);
                 addMap(data.longitude, data.latitude);
                 $("#brief").html('地址：'+data.province+" "+data.city+" "+data.area+" "+data.address+'</br>电话：'+data.mobile+'</br>网址：'+data.domain);
             }else{

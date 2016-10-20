@@ -4,7 +4,7 @@ define([
     'lib/swiper-3.3.1.jquery.min'
 ], function (base, Ajax, Swiper) {
     var COMPANYCODE = "", wxMenuCode = "", wxMenuName = "";
-    var start = 1, limit = 10, isEnd = false,
+    var start = 1, limit = 10, isEnd = false, wxMenuList = [],
         canScrolling = false, first = true, contentType = "";
     init();
     function init(){
@@ -42,8 +42,8 @@ define([
                     $("#customDiv").addClass("hidden");
                     $("#eleCont").removeClass("hidden");
                 }else{
-                   getContentPage();
-                   addListeners(); 
+                    getContentPage();
+                    addListeners(); 
                 }
             });
         getBanner();        
@@ -76,7 +76,7 @@ define([
         return base.getMenuList(COMPANYCODE)
             .then(function(res){
                 if(res.success){
-                    var list = res.data;
+                    var list = res.data, cCode, menuArr = {};
                     for(var i = 0; i < list.length; i++){
                         if(/^wei/.test(list[i].code)){
                             wxMenuCode = list[i].code;
