@@ -1,34 +1,37 @@
 define([
-    'app/controller/base',
-    'app/util/ajax'
-], function (base, Ajax) {
+    'app/controller/base'
+], function (base) {
     var start = 1, limit = 10, isEnd = false,
         canScrolling = false, first = true,
         code = base.getUrlParam("code"),
         COMPANYCODE, wxMenuCode = "", wxMenuName = "";
     init();
     function init(){
-        getContentPage();
-        if(COMPANYCODE = sessionStorage.getItem("compCode")){
-            base.addIcon();
-            if(wxMenuCode = sessionStorage.getItem("wxMenuCode")){
-                wxMenuName = sessionStorage.getItem("wxMenuName");
-                $("#wxdjcd").text(wxMenuName);
+        if(code){
+            getContentPage();
+            if(COMPANYCODE = sessionStorage.getItem("compCode")){
+                base.addIcon();
+                if(wxMenuCode = sessionStorage.getItem("wxMenuCode")){
+                    wxMenuName = sessionStorage.getItem("wxMenuName");
+                    $("#wxdjcd").text(wxMenuName);
+                }else{
+                    getWXCode();
+                }
             }else{
-                getWXCode();
+                base.getCompanyByUrl()
+                    .then(function(){
+                        if(COMPANYCODE = sessionStorage.getItem("compCode")){
+                            base.addIcon();
+                            getWXCode();
+                        }else{
+                            base.showMsg("非常抱歉，暂时无法获取公司信息!");
+                        }
+                    });
             }
+            addListeners();
         }else{
-             base.getCompanyByUrl()
-                .then(function(){
-                    if(COMPANYCODE = sessionStorage.getItem("compCode")){
-                        base.addIcon();
-                        getWXCode();
-                    }else{
-                        base.showMsg("非常抱歉，暂时无法获取公司信息!");
-                    }
-                });
+            base.showMsg("未传入菜单编号!");
         }
-        addListeners();
     }
 
     function addListeners(){
@@ -52,29 +55,34 @@ define([
                     for(var i = 0; i < list.length; i++){
                         var ll = list[i];
                         html += '<li class="wp100 b_e6_b">';
-                        if(ll.type == "0" || ll.url){
-                            if(ll.url){
-                                html += '<a class="show" href="'+ll.url+'">'
-                                            '<div class="plr12 ptb10 clearfix">'+
-                                                '<div class="fl wp30 tl"><img class="max-hp100p" src="'+ll.pic1+'"/></div>'+
-                                                '<div class="fl wp55 plr6">'+ll.title+'</div>'+
-                                                '<div class="fl wp15 s_10 tr">'+ll.endNote+'</div>'+
-                                            '</div>'+
-                                        '</a></li>';
-                            }else{
+
+
+                        //站内
+                        if(ll.kind == 1){
+                            //尾注是上传的
+                            if(ll.type == "0"){
                                 html += '<a class="show" href="'+ll.endNote+'">'+
                                             '<div class="plr12 ptb10 clearfix">'+
                                                 '<div class="fl wp30 tl"><img class="max-hp100p" src="'+ll.pic1+'"/></div>'+
                                                 '<div class="fl wp55 plr6">'+ll.title+'</div>'+
+                                                '<div class="fl wp15 s_10 tr">点击下载</div>'+
+                                            '</div>'+
+                                        '</a></li>';
+                            }else{
+                                html += '<a class="show" href="../custom/content.html?code='+ll.code+'">'+
+                                            '<div class="plr12 ptb10 clearfix">'+
+                                                '<div class="fl wp30 tl"><img class="max-hp100p" src="'+ll.pic1+'"/></div>'+
+                                                '<div class="fl wp55 plr6">'+ll.title+'</div>'+
+                                                '<div class="fl wp15 s_10 tr">'+(ll.endNote || "")+'</div>'+
                                             '</div>'+
                                         '</a></li>';
                             }
+                        //站外
                         }else{
-                            html += '<a class="show" href="../custom/content.html?code='+ll.code+'">'+
+                            html += '<a class="show" href="'+ll.url+'">'
                                         '<div class="plr12 ptb10 clearfix">'+
                                             '<div class="fl wp30 tl"><img class="max-hp100p" src="'+ll.pic1+'"/></div>'+
                                             '<div class="fl wp55 plr6">'+ll.title+'</div>'+
-                                            '<div class="fl wp15 s_10 tr">'+ll.endNote+'</div>'+
                                         '</div>'+
                                     '</a></li>';
                         }
@@ -104,6 +112,16 @@ define([
                             sessionStorage.setItem("wxMenuCode", wxMenuCode)
                             sessionStorage.setItem("wxMenuName", wxMenuName);
                             $("#wxdjcd").text(wxMenuName);
+                            sessionStorage.setItem("wxMenuType", list[i].contentType);
+                        //公司简介菜单
+                        }else if(/^com/.test(list[i].code)){
+                            sessionStorage.setItem("compMCode", list[i].code);
+                        //微信首页菜单
+                        }else if(/^inw/.test(list[i].code)){
+                            sessionStorage.setItem("wxIndexCode", list[i].code);
+                        //微信我要合作菜单
+                        }else if(/^cin/.test(list[i].code)){
+                            sessionStorage.setItem("wxCoopCode", list[i].code);
                         }
                     }
                 }

@@ -7,16 +7,24 @@ define([
     init();
     function init(){
         if(COMPANYCODE = sessionStorage.getItem("compCode")){
-            base.addIcon();
-            getCompany()
-                .then(function(){
-                    getBanner();
-                });
-            getCompMenuList();
-            if(sessionStorage.getItem("wxMenuCode")){
+            var data = sessionStorage.getItem("compInfo");
+            if(data){
+                data = JSON.parse(data);
+                addCompanyInfo(data);
+            }else{
+                getCompany();
+            }
+            //公司简介菜单
+            var compMenuCode = sessionStorage.getItem("compMCode");
+            if(compMenuCode){
+                getBanner(compMenuCode);
+                getCompMenuList();
                 var name = sessionStorage.getItem("wxMenuName");
                 $("#wxdjcd").text(name);
+            }else{
+                getCompMenuList(true);
             }
+            base.addIcon();
         }else{
             base.getCompanyByUrl(getMyCont);
         }
@@ -26,11 +34,7 @@ define([
         if(COMPANYCODE = sessionStorage.getItem("compCode")){
             base.addIcon();
             addCompanyInfo(res.data);
-            getCompMenuList();
-            getBanner()
-                .then(function(){
-                    getWXCode();
-                });
+            getCompMenuList(true);
         }else{
             base.showMsg("非常抱歉，暂时无法获取公司信息!");
         }
@@ -53,7 +57,7 @@ define([
         $("#slogan").text(data.slogan);
     }
 
-    function getCompMenuList(){
+    function getCompMenuList(flag){
         return base.getMenuList(COMPANYCODE)
             .then(function(res){
                 if(res.success){
@@ -69,9 +73,20 @@ define([
                             if(/^wei/.test(dd.code)){
                                 sessionStorage.setItem("wxMenuCode", dd.code)
                                 sessionStorage.setItem("wxMenuName", dd.name);
+                                sessionStorage.setItem("wxMenuType", dd.contentType);
                                 $("#wxdjcd").text(dd.name);
                             }else if(/^com/.test(dd.code)){
                                 cCode = dd.code;
+                                sessionStorage.setItem("compMCode", cCode);
+                                if(flag){
+                                    getBanner(cCode);
+                                }
+                            //微信首页菜单
+                            }else if(/^inw/.test(dd.code)){
+                                sessionStorage.setItem("wxIndexCode", dd.code);
+                            //微信我要合作菜单
+                            }else if(/^cin/.test(dd.code)){
+                                sessionStorage.setItem("wxCoopCode", dd.code);
                             }
 						}else{
                             if(!menuArr[pc]){
@@ -99,7 +114,7 @@ define([
             });
     }
 
-    function getBanner(){
+    function getBanner(code){
         return base.getBanner(COMPANYCODE, 4)
             .then(function(res){
                 if(res.success){

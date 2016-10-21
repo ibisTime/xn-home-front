@@ -8,8 +8,19 @@ define([
         var code = base.getUrlParam("code");
         init();
         function init(){
-            base.addIcon();
-            getContent();
+            if(sessionStorage.getItem("compCode")){
+                base.addIcon();
+            }else{
+                base.getCompanyByUrl()
+                    .then(function(){
+                        base.addIcon();
+                    });
+            }
+            if(code){
+                getContent();
+            }else{
+                base.showMsg("未传入内容编号!");
+            }
         }
 
         function getContent(){
@@ -19,28 +30,16 @@ define([
                         var data = res.data;
                         $("#title").text(data.title);
                         var pic = data.pic2;
-                        if(isPicture(pic)){
+                        if(pic){
                             $("#img").html('<img class="wp100" src="'+pic+'">');
-                        }else{
-                            $("#bg-video").removeClass("hidden")
-                                .html('<source src="'+pic+'" type="video/mp4">'+
-                                      '<source src="'+pic+'" type="video/WebM">'+
-                                      '<source src="'+pic+'" type="video/Ogg">');
+                        }else if(data.url){
+                            $("#img").html("<iframe height='300' width='100%' src='"+data.url+"' frameborder=0 'allowfullscreen'></iframe>");            
                         }
                         $("#description").html(data.description);
                     }else{
                         base.showMsg("非常抱歉，暂时无法获取相关内容!");
                     }
                 });
-        }
-
-        function isPicture(url){
-            var ext = url.substring(url.lastIndexOf("."), url.length).toUpperCase();
-            if(ext!=".BMP" && ext != ".PNG" && ext != ".GIF" && ext != ".JPG" && ext != ".JPEG"){
-                return false;
-            }else{
-                return true;
-            }
         }
     });
 });

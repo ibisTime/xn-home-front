@@ -163,7 +163,7 @@ define([
             }, time || 2000);
         },
         getCompany: function(code){
-            return Ajax.get(APIURL + '/company/info', {"companyCode": code}, true);
+            return Ajax.get(APIURL + '/company/info', {"companyCode": code});
         },
         getCompanyByUrl: function(func){
             var url = location.href;
@@ -171,11 +171,12 @@ define([
             if(idx != -1){
                 url = url.substring(0, idx);
             }
-            return Ajax.get(APIURL + '/company/byUrl', {"url": url}, true)
+            return Ajax.get(APIURL + '/company/byUrl', {"url": url})
                 .then(function (res) {
                     if (res.success && !$.isEmptyObject(res.data)) {
                         sessionStorage.setItem("compCode", res.data.code);
                         sessionStorage.setItem("icon", res.data.icon);
+                        sessionStorage.setItem("compInfo", JSON.stringify(res.data));
                     }
                     func && func(res);
                 });
@@ -184,22 +185,25 @@ define([
             return Ajax.get(APIURL + '/company/menu/list', 
                 {"companyCode": code}, true);
         },
-        getBanner: function (code, location){
+        getBanner: function (code, pCode){
             return Ajax.get(APIURL + '/company/banner/list',
-                {"companyCode": code, "location": location}, true);
+                {"companyCode": code, "parentCode": pCode});
         },
         getContentPage: function(code, start, limit){
             return Ajax.get(APIURL + "/company/acontent/page",
-                {"menuCode": code, "start": start, "limit": limit}, true);
+                {"menuCode": code, "start": start, "limit": limit});
         },
         getContent: function(code){
-            return Ajax.get(APIURL + "/company/acontent", {"code": code}, true);
+            return Ajax.get(APIURL + "/company/acontent", {"code": code});
         },
         getContentList: function(code){
-            return Ajax.get(APIURL + '/company/acontent/list', {"menuCode": code}, true);
+            return Ajax.get(APIURL + '/company/acontent/list', {"menuCode": code});
         },
         addIcon: function(){
-            $("head").append('<link rel="shortcut icon" type="image/ico" href="'+sessionStorage.getItem("icon")+'">');
+            var icon = sessionStorage.getItem("icon");
+            if(icon && icon != "undefined"){
+                $("head").append('<link rel="shortcut icon" type="image/ico" href="'+icon+'">');
+            }
         }
     };
     return Base;

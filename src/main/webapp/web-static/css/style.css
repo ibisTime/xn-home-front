@@ -19,6 +19,7 @@ input,select,button{-webkit-appearance: none;-moz-appearance: none;appearance: n
 .top .logo img{
 	max-width: 100%;
 	vertical-align: middle;
+	max-height: 100%;
 }
 .top .logo:after {
     content: "";

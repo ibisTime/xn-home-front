@@ -16,12 +16,16 @@ define([
         });
 	initView();
 	function initView(){
-
 		if(COMPANYCODE = sessionStorage.getItem("compCode")){
+			var data = sessionStorage.getItem("compInfo");
+			if(data){
+				data = JSON.parse(data);
+				addCompanyInfo({"success":true,"data": data});
+			}else{
+				getCompany();
+			}
 			base.addIcon();
 			getMenuList();
-			getCompany();
-			getBanner();
 		}else{
 			base.getCompanyByUrl(getMyCont);
 		}
@@ -31,7 +35,6 @@ define([
 		if(COMPANYCODE = sessionStorage.getItem("compCode")){
 			base.addIcon();
 			getMenuList();
-			getBanner();
 			addCompanyInfo(res);
 		}else{
 			base.showMsg("非常抱歉，暂时无法获取公司信息!");
@@ -59,11 +62,12 @@ define([
 						}
 					}
 					for(var j = 0; j < menuSeq.length; j++){
-						//不是微信顶级菜单
-						if(!/^wei/.test(menuSeq[j])){
+						//不是微信顶级菜单、微信首页和微信我要合作
+						if(!/^wei/.test(menuSeq[j]) && !/^inw/.test(menuSeq[j]) && !/^cin/.test(menuSeq[j])){
 							//父菜单
 							var d = menuArr1[menuSeq[j]];
 							if(/^ind/.test(d.code)){
+								getBanner(d.code);
 								html = '<li><a href="./index.html" class="wa active">首页</a></li>' + html;
 							}else{
 								html += '<li><a href="../menu/content.html?ct='+d.contentType+'&m='+d.code+'" class="wa time1">'+d.name+'</a></li>';
@@ -102,8 +106,8 @@ define([
 		}
 	}
 
-	function getBanner(){
-        base.getBanner(COMPANYCODE, 1)
+	function getBanner(code){
+        base.getBanner(COMPANYCODE, code)
             .then(function(res){
                 if(res.success){
                     var data = res.data, html = "";

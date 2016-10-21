@@ -2071,3 +2071,47 @@ font-size: 16px;
 .max-hp100p{
     max-height: 100px;
 }
+@keyframes myfirst
+{
+    0%   {transform: rotate(0deg);}
+    25%  {transform: rotate(10deg);}
+    50%  {transform: rotate(0deg);}
+    75%  {transform: rotate(-10deg);}
+    100% {transform: rotate(0deg);}
+}
+
+@-moz-keyframes myfirst /* Firefox */
+{
+    0%   {-moz-transform: rotate(0deg);}
+    25%  {-moz-transform: rotate(10deg);}
+    50%  {-moz-transform: rotate(0deg);}
+    75%  {-moz-transform: rotate(-10deg);}
+    100% {-moz-transform: rotate(0deg);}
+}
+
+@-webkit-keyframes myfirst /* Safari 和 Chrome */
+{
+    0%   {-webkit-transform: rotate(0deg);}
+    25%  {-webkit-transform: rotate(10deg);}
+    50%  {-webkit-transform: rotate(0deg);}
+    75%  {-webkit-transform: rotate(-10deg);}
+    100% {-webkit-transform: rotate(0deg);}
+}
+
+@-o-keyframes myfirst /* Opera */
+{
+    0%   {-o-transform: rotate(0deg);}
+    25%  {-o-transform: rotate(10deg);}
+    50%  {-o-transform: rotate(0deg);}
+    75%  {-o-transform: rotate(-10deg);}
+    100% {-o-transform: rotate(0deg);}
+}
+.ksqt-div{
+    animation: myfirst 3s linear 0s infinite normal;
+    /* Firefox: */
+    -moz-animation: myfirst 3s linear 0s infinite normal;
+    /* Safari 和 Chrome: */
+    -webkit-animation: myfirst 3s linear 0s infinite normal;
+    /* Opera: */
+    -o-animation: myfirst 3s linear 0s infinite normal;
+}

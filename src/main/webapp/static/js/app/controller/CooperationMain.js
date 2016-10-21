@@ -8,14 +8,22 @@ define([
 
 	function init(){
 		if(COMPANYCODE = sessionStorage.getItem("compCode")){
-			base.addIcon();
-			if(wxMenuCode = sessionStorage.getItem("wxMenuCode")){
-                wxMenuName = sessionStorage.getItem("wxMenuName");
+			var data = sessionStorage.getItem("compInfo");
+			if(data){
+				data = JSON.parse(data);
+				addCompanyInfo({"success":true,"data": data});
+			}else{
+				getCompany();
+			}
+			var wxCoopCode = sessionStorage.getItem("wxCoopCode");
+			if(wxCoopCode){
+				getBanner(wxCoopCode);
+				wxMenuName = sessionStorage.getItem("wxMenuName");
                 $("#wxdjcd").text(wxMenuName);
-            }else{
-                getWXCode();
-            }
-            getCompany();
+			}else{
+				getWXCode();
+			}
+			base.addIcon();
 		}else{
 			base.getCompanyByUrl(getMyCont);
 		}
@@ -41,7 +49,6 @@ define([
 
 	function addCompanyInfo(res){
 		if(res.success){
-			getBanner();
 			var data = res.data;
 			$("#qrCode").html('<img class="wp40" src="'+data.qrCode+'">')
 		}else{
@@ -56,12 +63,23 @@ define([
 					var list = res.data;
 					for(var i = 0; i < list.length; i++){
 						if(/^wei/.test(list[i].code)){
-							wxMenuCode = list[i].code;
-							wxMenuName = list[i].name;
-							sessionStorage.setItem("wxMenuCode", wxMenuCode)
-							sessionStorage.setItem("wxMenuName", wxMenuName);
-							$("#wxdjcd").text(wxMenuName);
-						}
+                            wxMenuCode = list[i].code;
+                            wxMenuName = list[i].name;
+                            sessionStorage.setItem("wxMenuCode", wxMenuCode)
+                            sessionStorage.setItem("wxMenuName", wxMenuName);
+                            $("#wxdjcd").text(wxMenuName);
+                            sessionStorage.setItem("wxMenuType", list[i].contentType);
+                        //公司简介菜单
+                        }else if(/^com/.test(list[i].code)){
+                            sessionStorage.setItem("compMCode", list[i].code);
+                        //微信首页菜单
+                        }else if(/^inw/.test(list[i].code)){
+                            sessionStorage.setItem("wxIndexCode", list[i].code);
+                        //微信我要合作菜单
+                        }else if(/^cin/.test(list[i].code)){
+							getBanner(list[i].code);
+                            sessionStorage.setItem("wxCoopCode", list[i].code);
+                        }
 					}
 				}
 			});
@@ -83,8 +101,8 @@ define([
     	});
 	}
 
-	function getBanner(){
-        base.getBanner(COMPANYCODE, 5)
+	function getBanner(code){
+        base.getBanner(COMPANYCODE, code)
             .then(function(res){
                 if(res.success){
                     var data = res.data, html = "";

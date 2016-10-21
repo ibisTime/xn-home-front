@@ -6,31 +6,35 @@ define([
     var COMPANYCODE, wxMenuCode = "", wxMenuName = "";
     init();
     function init(){
-        if(COMPANYCODE = sessionStorage.getItem("compCode")){
-            base.addIcon();
-            if(wxMenuCode = sessionStorage.getItem("wxMenuCode")){
-                wxMenuName = sessionStorage.getItem("wxMenuName");
-                $("#wxdjcd").text(wxMenuName);
+        if(code){
+            if(COMPANYCODE = sessionStorage.getItem("compCode")){
+                base.addIcon();
+                if(wxMenuCode = sessionStorage.getItem("wxMenuCode")){
+                    wxMenuName = sessionStorage.getItem("wxMenuName");
+                    $("#wxdjcd").text(wxMenuName);
+                }else{
+                    getWXCode();
+                }
             }else{
-                getWXCode();
-            }
-        }else{
-            base.getCompanyByUrl()
-                .then(function(){
-                     if(COMPANYCODE = sessionStorage.getItem("compCode")){
-                        base.addIcon();
-                        if(wxMenuCode = sessionStorage.getItem("wxMenuCode")){
-                            wxMenuName = sessionStorage.getItem("wxMenuName");
-                            $("#wxdjcd").text(wxMenuName);
+                base.getCompanyByUrl()
+                    .then(function(){
+                        if(COMPANYCODE = sessionStorage.getItem("compCode")){
+                            base.addIcon();
+                            if(wxMenuCode = sessionStorage.getItem("wxMenuCode")){
+                                wxMenuName = sessionStorage.getItem("wxMenuName");
+                                $("#wxdjcd").text(wxMenuName);
+                            }else{
+                                getWXCode();
+                            }
                         }else{
-                            getWXCode();
+                            base.showMsg("非常抱歉，暂时无法获取公司信息!")
                         }
-                    }else{
-                        base.showMsg("非常抱歉，暂时无法获取公司信息!")
-                    }
-                });
+                    });
+            }
+            getContent();
+        }else{
+            base.showMsg("未传入菜单编号!");
         }
-        getContent();
     }
 
     function getContent(){
@@ -40,13 +44,10 @@ define([
                     var data = res.data[0];
                     $("#title").text(data.title);
                     var pic = data.pic2;
-                    if(isPicture(pic)){
+                    if(pic){
                         $("#img").html('<img class="wp100" src="'+pic+'">');
-                    }else{
-                        $("#bg-video").removeClass("hidden")
-                            .html('<source src="'+pic+'" type="video/mp4">'+
-                                    '<source src="'+pic+'" type="video/WebM">'+
-                                    '<source src="'+pic+'" type="video/Ogg">');
+                    }else if(data.url){
+                        $("#img").html("<iframe height='300' width='100%' src='"+data.url+"' frameborder=0 'allowfullscreen'></iframe>");
                     }
                     $("#description").html(data.description);
                 }else{
@@ -67,18 +68,19 @@ define([
                             sessionStorage.setItem("wxMenuCode", wxMenuCode)
                             sessionStorage.setItem("wxMenuName", wxMenuName);
                             $("#wxdjcd").text(wxMenuName);
+                            sessionStorage.setItem("wxMenuType", list[i].contentType);
+                        //公司简介菜单
+                        }else if(/^com/.test(list[i].code)){
+                            sessionStorage.setItem("compMCode", list[i].code);
+                        //微信首页菜单
+                        }else if(/^inw/.test(list[i].code)){
+                            sessionStorage.setItem("wxIndexCode", list[i].code);
+                        //微信我要合作菜单
+                        }else if(/^cin/.test(list[i].code)){
+                            sessionStorage.setItem("wxCoopCode", list[i].code);
                         }
                     }
                 }
             });
-    }
-
-    function isPicture(url){
-        var ext = url.substring(url.lastIndexOf("."), url.length).toUpperCase();
-        if(ext!=".BMP" && ext != ".PNG" && ext != ".GIF" && ext != ".JPG" && ext != ".JPEG"){
-            return false;
-        }else{
-            return true;
-        }
     }
 });

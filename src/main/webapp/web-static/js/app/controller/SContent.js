@@ -26,10 +26,16 @@ define([
 
 	function init(){
 		if(COMPANYCODE = sessionStorage.getItem("compCode")){
+			var data = sessionStorage.getItem("compInfo");
+			if(data){
+				data = JSON.parse(data);
+				addCompanyInfo({"success":true,"data": data});
+			}else{
+				getCompany();
+			}
 			base.addIcon();
 			//获取菜单列表
 			getMenuList();
-			getCompany();
 		}else{
 			base.getCompanyByUrl(getMyCont);
 		}
@@ -75,16 +81,16 @@ define([
 						var dd = data[j], pc = dd.parentCode;
 						menuArr1[dd.code] = dd;
 						if(!pc || pc == "0"){
-							//不是微信顶级菜单
-							if(!/^wei/.test(dd.code)){
+							//不是微信顶级菜单、微信首页和微信我要合作 
+							if(!/^wei/.test(dd.code) && !/^inw/.test(dd.code) && !/^cin/.test(dd.code)){
 								if(!menuArr[dd.code]){
 									menuArr[dd.code] = [];
 								}
 								menuSeq.push(dd.code);
 							}
 						}else{
-							//不是微信顶级菜单
-							if(!/^wei/.test(pc)){
+							//不是微信顶级菜单、微信首页和微信我要合作
+							if(!/^wei/.test(pc) && !/^inw/.test(pc) && !/^cin/.test(dd.code)){
 								if(!menuArr[pc]){
 									menuArr[pc] = [];
 								}
@@ -151,7 +157,7 @@ define([
 				//不是当前菜单的父菜单
 				}else{
 					if(/^ind/.test(pMenu.code)){
-						topHtml = '<li><a href="../home/index.html" class="wa time1">'+pMenu.name+'</a></li>' + topHtml;
+						topHtml = '<li><a href="../home/index.html" class="wa time1">首页</a></li>' + topHtml;
 					}else {
 						topHtml += '<li><a href="./content.html?ct=' + pMenu.contentType + '&m=' + pMenu.code + '" class="wa time1">' + pMenu.name + '</a></li>';
 					}
@@ -317,8 +323,40 @@ define([
 		}
 		for(var i = 0; i < list.length; i++){
 			var d = list[i];
-			if(d.type == "0" || d.url){
-			if(d.url){
+			//站内
+			if(d.kind == 1){
+				//尾注是上传的
+				if(d.type == "0"){
+					html += '<li>'+
+								'<a href="javascript:void(0);" class="time1 cursor_d">'+
+									'<div class="pic">'+
+										'<img src="'+d.pic1+'" class="time1">'+
+									'</div>'+
+									'<div class="n_wz">'+
+										'<div class="n_title time1">'+
+											'<span class="wz">'+d.title+'</span>'+
+										'</div>'+
+									'</div>'+
+								'</a>'+
+								'<a href="' + d.endNote + '" target="_blank" class="download-sp"><span class="idx-tips">点击下载</span></a>'+
+							'</li>';
+				}else{
+					html += '<li>'+
+								'<a href="./content.html?ct=ele&code='+d.code+'&m='+menuCode+'&pc='+parent_code+'" class="time1">'+
+									'<div class="pic">'+
+										'<img src="'+d.pic1+'" class="time1">'+
+									'</div>'+
+									'<div class="n_wz">'+
+										'<div class="n_title time1">'+
+											'<span class="idx-tips">'+ (d.endNote || "") +'</span>'+
+											'<span class="wz">'+d.title+'</span>'+
+										'</div>'+
+									'</div>'+
+								'</a>'+
+							'</li>';
+				}
+			//站外
+			}else{
 				html += '<li>'+
 							'<a href="'+d.url+'" target="_blank" class="time1">'+
 								'<div class="pic">'+
@@ -331,35 +369,6 @@ define([
 								'</div>'+
 							'</a>'+
 						'</li>';
-			}else{
-				html += '<li>'+
-							'<a href="javascript:void(0);" class="time1 cursor_d">'+
-								'<div class="pic">'+
-									'<img src="'+d.pic1+'" class="time1">'+
-								'</div>'+
-								'<div class="n_wz">'+
-									'<div class="n_title time1">'+
-										'<span class="wz">'+d.title+'</span>'+
-									'</div>'+
-								'</div>'+
-							'</a>'+
-							'<a href="' + d.endNote + '" target="_blank" class="download-sp"><span class="idx-tips">点击下载</span></a>'+
-						'</li>';
-			}
-			}else{
-				html += '<li>'+
-						'<a href="./content.html?ct=ele&code='+d.code+'&m='+menuCode+'&pc='+parent_code+'" target="_blank" class="time1">'+
-							'<div class="pic">'+
-								'<img src="'+d.pic1+'" class="time1">'+
-							'</div>'+
-							'<div class="n_wz">'+
-								'<div class="n_title time1">'+
-									'<span class="idx-tips">'+ d.endNote +'</span>'+
-									'<span class="wz">'+d.title+'</span>'+
-								'</div>'+
-							'</div>'+
-						'</a>'+
-					'</li>';
 			}
 		}
 		html += '</ul></div>'+
@@ -396,7 +405,10 @@ define([
 		}
 		if(data.pic2){
 			html += '<p style="text-align: left;"><br><img src="'+data.pic2+'"></p>';
+		}else if(data.url){
+			html += "<embed src='"+data.url+"' allowFullScreen='true' quality='high' width='480' height='400' align='middle' allowScriptAccess='always' type='application/x-shockwave-flash'></embed>";
 		}
+		
 		html += '</div></div><div class="hen"></div>';
 		return html;
 	}

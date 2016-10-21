@@ -114,10 +114,8 @@ public class CompanyController {
     @ResponseBody
     public Object getBannerList(
     		@RequestParam(value = "name", required = false) String name,
-    		@RequestParam(value = "location", required = false) String location,
-    		@RequestParam(value = "status", required = false) String status,
-    		@RequestParam(value = "updater", required = false) String updater,
+    		@RequestParam(value = "parentCode", required = false) String parentCode,
 			@RequestParam("companyCode") String companyCode){
-    	return bannerAO.getBannerList(name, location, status, updater, companyCode);
+    	return bannerAO.getBannerList(name, parentCode, companyCode);
     }
 }

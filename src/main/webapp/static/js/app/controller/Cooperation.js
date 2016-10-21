@@ -86,11 +86,7 @@ define([
             .then(function (res) {
                 $(".icon-loading").remove();
                 if(res.success){
-                    base.showMsg("提交成功!");
-                    $("#remark").val("");
-                    $("#telephone").val("");
-                    $("#person").val("");
-                    $("#compName").val("");
+                    location.href = "./submit_success.html";
                 }else{
                     base.showMsg("非常抱歉，提交失败!")
                 }
@@ -102,12 +98,21 @@ define([
                 if(res.success){
                     var list = res.data;
                     for(var i = 0; i < list.length; i++){
+                        //微信顶级菜单
                         if(/^wei/.test(list[i].code)){
-                            wxMenuCode = list[i].code;
-                            wxMenuName = list[i].name;
-                            sessionStorage.setItem("wxMenuCode", wxMenuCode)
-                            sessionStorage.setItem("wxMenuName", wxMenuName);
-                            $("#wxdjcd").text(wxMenuName);
+                            sessionStorage.setItem("wxMenuCode", list[i].code)
+                            sessionStorage.setItem("wxMenuName", list[i].name);
+                            sessionStorage.setItem("wxMenuType", list[i].contentType);
+                            $("#wxdjcd").text(list[i].name);
+                        //公司简介菜单
+                        }else if(/^com/.test(list[i].code)){
+                            sessionStorage.setItem("compMCode", list[i].code);
+                        //微信首页菜单
+                        }else if(/^inw/.test(list[i].code)){
+                            sessionStorage.setItem("wxIndexCode", list[i].code);
+                        //微信我要合作菜单
+                        }else if(/^cin/.test(list[i].code)){
+                            sessionStorage.setItem("wxCoopCode", list[i].code);
                         }
                     }
                 }

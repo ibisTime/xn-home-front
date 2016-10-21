@@ -35,18 +35,27 @@ define([
     }
 
     function getMyContent(){
-        getWXCode()
-            .then(function(){
-                if(contentType == "ele"){
-                    getContent();                    
-                    $("#customDiv").addClass("hidden");
-                    $("#eleCont").removeClass("hidden");
-                }else{
-                    getContentPage();
-                    addListeners(); 
-                }
-            });
-        getBanner();        
+        wxMenuCode = sessionStorage.getItem("wxMenuCode");
+        if(wxMenuCode){
+            getBanner();
+            wxMenuName = sessionStorage.getItem("wxMenuName");
+            $("#wxdjcd").text(wxMenuName);
+            contentType = sessionStorage.getItem("wxMenuType");
+            judgeContType();
+            addTitle();
+        }else{
+            getWXCode().then(judgeContType);
+        }      
+    }
+    function judgeContType(){
+        if(contentType == "ele"){
+            getContent();                    
+            $("#customDiv").addClass("hidden");
+            $("#eleCont").removeClass("hidden");
+        }else{
+            getContentPage();
+            addListeners(); 
+        }
     }
 
     function getContent(){
@@ -57,36 +66,14 @@ define([
                     var data = res.data[0];
                     $("#title").text(data.title);
                     var pic = data.pic2;
-                    if(isPicture(pic)){
+                    if(pic){
                         $("#img").html('<img class="wp100" src="'+pic+'">');
-                    }else{
-                        $("#bg-video").removeClass("hidden")
-                            .html('<source src="'+pic+'" type="video/mp4">'+
-                                    '<source src="'+pic+'" type="video/WebM">'+
-                                    '<source src="'+pic+'" type="video/Ogg">');
+                    }else if(data.url){
+                        $("#img").html("<iframe height='300' width='100%' src='"+data.url+"' frameborder=0 'allowfullscreen'></iframe>");            
                     }
                     $("#description").html(data.description);
                 }else{
                     base.showMsg("非常抱歉，暂时无法获取相关内容!");
-                }
-            });
-    }
-
-    function getWXCode(){
-        return base.getMenuList(COMPANYCODE)
-            .then(function(res){
-                if(res.success){
-                    var list = res.data, cCode, menuArr = {};
-                    for(var i = 0; i < list.length; i++){
-                        if(/^wei/.test(list[i].code)){
-                            wxMenuCode = list[i].code;
-                            wxMenuName = list[i].name;
-                            sessionStorage.setItem("wxMenuCode", wxMenuCode)
-                            sessionStorage.setItem("wxMenuName", wxMenuName);
-                            $("#wxdjcd").text(wxMenuName);
-                            contentType = list[i].contentType;
-                        }
-                    }
                 }
             });
     }
@@ -105,14 +92,17 @@ define([
                         html += '<li class="wp50 fl">'+
                                     '<div class="plr12">'+
                                         '<div class="p">';
-                        if(ll.type == "0" || ll.url){
-                            if(ll.url){
-                                html += '<a class="re wp100" href="'+ll.url+'">';
-                            }else{
+                        //站内
+                        if(ll.kind == 1){
+                            //尾注是上传的
+                            if(ll.type == "0"){
                                 html += '<a class="re wp100" href="'+ll.endNote+'">';
+                            }else{
+                                html += '<a class="re wp100" href="./content.html?code='+ll.code+'">';
                             }
+                         //站外
                         }else{
-                            html += '<a class="re wp100" href="./content.html?code='+ll.code+'">';
+                             html += '<a class="re wp100" href="'+ll.url+'">';
                         }
                         html += '<div><img class="p-pic" src="'+ll.pic1+'"/></div>'+
                                         '</a>'+
@@ -132,8 +122,48 @@ define([
                 }
             })
     }
+    
+    function getWXCode(){
+        return base.getMenuList(COMPANYCODE)
+            .then(function(res){
+                if(res.success){
+                    var list = res.data, cCode, menuArr = {};
+                    for(var i = 0; i < list.length; i++){
+                        if(/^wei/.test(list[i].code)){
+                            wxMenuCode = list[i].code;
+                            getBanner();
+                            wxMenuName = list[i].name;
+                            sessionStorage.setItem("wxMenuCode", wxMenuCode)
+                            sessionStorage.setItem("wxMenuName", wxMenuName);
+                            $("#wxdjcd").text(wxMenuName);
+                            contentType = list[i].contentType;
+                            sessionStorage.setItem("wxMenuType", contentType);
+                            addTitle();
+                        //公司简介菜单
+                        }else if(/^com/.test(list[i].code)){
+                            sessionStorage.setItem("compMCode", list[i].code);
+                        //微信首页菜单
+                        }else if(/^inw/.test(list[i].code)){
+                            sessionStorage.setItem("wxIndexCode", list[i].code);
+                        //微信我要合作菜单
+                        }else if(/^cin/.test(list[i].code)){
+                            sessionStorage.setItem("wxCoopCode", list[i].code);
+                        }
+                    }
+                }
+            });
+    }
+    function addTitle(){
+        document.title = wxMenuName;
+        var $iframe = $('<iframe src="/static/images/favicon.ico"></iframe>');
+        $iframe.on('load',function() {
+            setTimeout(function() {
+                $iframe.off('load').remove();
+            }, 0);
+        }).appendTo($("body"));
+    }
     function getBanner(){
-        base.getBanner(COMPANYCODE, 3)
+        base.getBanner(COMPANYCODE, wxMenuCode)
             .then(function(res){
                 if(res.success){
                     var data = res.data, html = "";
