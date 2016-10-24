@@ -1643,7 +1643,12 @@ textarea {
 .vm, .icon-iconshoujizhuanxiang.vm:before {
     vertical-align: middle;
 }
-
+.va-m{
+    vertical-align: middle;
+}
+.va-t{
+    vertical-align: top;
+}
 .color0 {
     text-indent: -2000px;
 }
@@ -2114,4 +2119,8 @@ font-size: 16px;
     -webkit-animation: myfirst 3s linear 0s infinite normal;
     /* Opera: */
     -o-animation: myfirst 3s linear 0s infinite normal;
+}
+.endNote{
+    position: absolute;
+    right:12px;
 }

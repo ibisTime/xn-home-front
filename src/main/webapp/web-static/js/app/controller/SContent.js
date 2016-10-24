@@ -406,7 +406,7 @@ define([
 		if(data.pic2){
 			html += '<p style="text-align: left;"><br><img src="'+data.pic2+'"></p>';
 		}else if(data.url){
-			html += "<embed src='"+data.url+"' allowFullScreen='true' quality='high' width='480' height='400' align='middle' allowScriptAccess='always' type='application/x-shockwave-flash'></embed>";
+			html += "<iframe width='100%' height='400' src='"+data.url+"' frameborder=0 'allowfullscreen' style='border:none;'></iframe>";
 		}
 		
 		html += '</div></div><div class="hen"></div>';

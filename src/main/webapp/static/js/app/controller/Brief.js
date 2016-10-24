@@ -75,6 +75,7 @@ define([
                                 sessionStorage.setItem("wxMenuName", dd.name);
                                 sessionStorage.setItem("wxMenuType", dd.contentType);
                                 $("#wxdjcd").text(dd.name);
+                            //公司简介菜单
                             }else if(/^com/.test(dd.code)){
                                 cCode = dd.code;
                                 sessionStorage.setItem("compMCode", cCode);
@@ -104,7 +105,7 @@ define([
                         if(ll.contentType == "ele"){
                             html += '<a href="./s_content.html?code='+ll.code+'" class="plr10 p_r b_e6_b show">'+ll.name+'<i class="r-tip"></i></a>';
                         }else{
-                            html += '<a href="./list.html?code='+ll.code+'" class="plr10 p_r b_e6_b show">'+ll.name+'<i class="r-tip"></i></a>';
+                            html += '<a href="./list.html?code='+ll.code+'&name='+ll.name+'" class="plr10 p_r b_e6_b show">'+ll.name+'<i class="r-tip"></i></a>';
                         }
                     }
                     $("#menuList").html(html);
@@ -115,7 +116,7 @@ define([
     }
 
     function getBanner(code){
-        return base.getBanner(COMPANYCODE, 4)
+        return base.getBanner(COMPANYCODE, code)
             .then(function(res){
                 if(res.success){
                     var data = res.data, html = "";

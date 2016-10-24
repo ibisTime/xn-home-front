@@ -4,6 +4,7 @@ define([
     var start = 1, limit = 10, isEnd = false,
         canScrolling = false, first = true,
         code = base.getUrlParam("code"),
+        name = base.getUrlParam("name"),
         COMPANYCODE, wxMenuCode = "", wxMenuName = "";
     init();
     function init(){
@@ -44,6 +45,7 @@ define([
     }
 
     function getContentPage(){
+        addTitle();
         base.getContentPage(code, start, limit)
             .then(function(res){
                 if(res.success){
@@ -63,26 +65,26 @@ define([
                             if(ll.type == "0"){
                                 html += '<a class="show" href="'+ll.endNote+'">'+
                                             '<div class="plr12 ptb10 clearfix">'+
-                                                '<div class="fl wp30 tl"><img class="max-hp100p" src="'+ll.pic1+'"/></div>'+
-                                                '<div class="fl wp55 plr6">'+ll.title+'</div>'+
-                                                '<div class="fl wp15 s_10 tr">点击下载</div>'+
+                                                '<div class="inline_block wp30 tl va-m"><img class="max-hp100p" src="'+ll.pic1+'"/></div>'+
+                                                '<div class="inline_block wp55 plr6 va-m">'+ll.title+'</div>'+
+                                                '<div class="inline_block s_10 tr va-t endNote">点击下载</div>'+
                                             '</div>'+
                                         '</a></li>';
                             }else{
                                 html += '<a class="show" href="../custom/content.html?code='+ll.code+'">'+
                                             '<div class="plr12 ptb10 clearfix">'+
-                                                '<div class="fl wp30 tl"><img class="max-hp100p" src="'+ll.pic1+'"/></div>'+
-                                                '<div class="fl wp55 plr6">'+ll.title+'</div>'+
-                                                '<div class="fl wp15 s_10 tr">'+(ll.endNote || "")+'</div>'+
+                                                '<div class="inline_block wp30 tl va-m"><img class="max-hp100p" src="'+ll.pic1+'"/></div>'+
+                                                '<div class="inline_block wp55 plr6 va-m">'+ll.title+'</div>'+
+                                                '<div class="inline_block s_10 tr va-t endNote">'+(ll.endNote || "")+'</div>'+
                                             '</div>'+
                                         '</a></li>';
                             }
                         //站外
                         }else{
-                            html += '<a class="show" href="'+ll.url+'">'
+                            html += '<a class="show" href="'+ll.url+'">'+
                                         '<div class="plr12 ptb10 clearfix">'+
-                                            '<div class="fl wp30 tl"><img class="max-hp100p" src="'+ll.pic1+'"/></div>'+
-                                            '<div class="fl wp55 plr6">'+ll.title+'</div>'+
+                                            '<div class="inline_block wp30 tl va-m"><img class="max-hp100p" src="'+ll.pic1+'"/></div>'+
+                                            '<div class="inline_block wp55 plr6 va-m">'+ll.title+'</div>'+
                                         '</div>'+
                                     '</a></li>';
                         }
@@ -99,6 +101,17 @@ define([
                     }
                 }
             })
+    }
+    function addTitle(){
+        if(name){
+            document.title = name;
+            var $iframe = $('<iframe src="/static/images/favicon.ico"></iframe>');
+            $iframe.on('load',function() {
+                setTimeout(function() {
+                    $iframe.off('load').remove();
+                }, 0);
+            }).appendTo($("body"));
+        }
     }
     function getWXCode(){
         return base.getMenuList(COMPANYCODE)
