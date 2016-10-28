@@ -11,9 +11,6 @@ define([
 		}, COMPANYCODE;				//公司的code
 	var menuArr = {}, menuArr1 = {}, menuSeq = [];
 	var contentSource = Dict.get("contentSource"),				//api的url地址
-		//u = base.getUrlParam("u"),								//是否是定制页面
-		//source = contentSource["default"],						//默认api地址
-		//tmpl = base.getUrlParam("tmp"),							//模板类型（001：单条数据模板，002：列表数据模板）
 		contentType = base.getUrlParam("ct"),					//内容类型（ele：单条数据，list：列表数据）
 		menuCode = base.getUrlParam("m"),						//菜单编号
 		limit = Dict.get("limit"), url, specialUrl,				//limit：列表显示时，单页显示多少条数据
@@ -82,7 +79,8 @@ define([
 						menuArr1[dd.code] = dd;
 						if(!pc || pc == "0"){
 							//不是微信顶级菜单、微信首页和微信我要合作 
-							if(!/^wei/.test(dd.code) && !/^inw/.test(dd.code) && !/^cin/.test(dd.code)){
+							//if(!/^wei/.test(dd.code) && !/^inw/.test(dd.code) && !/^cin/.test(dd.code)){
+							if( /^M_Web$/.test(dd.location) ){
 								if(!menuArr[dd.code]){
 									menuArr[dd.code] = [];
 								}
@@ -108,116 +106,124 @@ define([
 		var topHtml = "", leftHtml = "";
 		//如果是查看二级菜单的内容
 		if(parentCode && parentCode != "0"){
+			//遍历顶级菜单
 			for(var j = 0; j < menuSeq.length; j++){
 				var pCode = menuSeq[j], pMenu = menuArr1[pCode];
-				//是当前菜单的父菜单
-				if(parentCode == pCode){
-					topHtml += '<li><a href="./content.html?ct='+pMenu.contentType+'&m='+ pCode+'" class="wa active">'+pMenu.name+'</a></li>';
-					//一级菜单的子菜单
-					var childrenMenu = menuArr[pCode];
-					//有子菜单
-					if(childrenMenu.length){
-						hasChildMenu = true;
-						//如果当前一级菜单是公司简介，并且有子菜单，则添加name为 公司简介 的菜单
-						if(/^com/.test(pCode)){
-							childrenMenu.unshift({
-								"code": "gsjj",
-								"parentCode": pCode,
-								"name": "公司简介",
-								"contentType": "ele"
-							});
-						}
-						for(var i = 0; i < childrenMenu.length; i++){
-							var childMenu = childrenMenu[i];
-							//如果是当前查看的菜单
-							if(childMenu.code == menuCode){
-								leftHtml += '<li>'+
-											'<a href="./content.html?ct=' + childMenu.contentType + '&m=' + childMenu.code + '&pc=' + parentCode + '" class="wz_a active">'+
-												'<div class="wz time1">' + childMenu.name + '</div>'+
-												'<div class="sk time1"></div>'+
-											'</a>'+
-										 '</li>';
-							}else{
-								leftHtml += '<li>' +
-											'<a href="./content.html?ct=' + childMenu.contentType + '&m=' + childMenu.code + '&pc=' + parentCode + '" class="wz_a time1">' +
-												'<div class="wz time1">' + childMenu.name + '</div>' +
-												'<div class="sk time1"></div>' +
-											'</a>'+
-										 '</li>';
+				//是web菜单
+				if( /^M_Web$/.test( pMenu.location ) ){
+					
+					//是当前菜单的父菜单
+					if(parentCode == pCode){
+						topHtml += '<li><a href="./content.html?ct='+pMenu.contentType+'&m='+ pCode+'" class="wa active">'+pMenu.name+'</a></li>';
+						//一级菜单的子菜单
+						var childrenMenu = menuArr[pCode];
+						//有子菜单
+						if(childrenMenu.length){
+							hasChildMenu = true;
+							//如果当前一级菜单是公司简介，并且有子菜单，则添加name为 公司简介 的菜单
+							if(/^com/.test(pCode)){
+								childrenMenu.unshift({
+									"code": "gsjj",
+									"parentCode": pCode,
+									"name": "公司简介",
+									"contentType": "ele"
+								});
 							}
+							for(var i = 0; i < childrenMenu.length; i++){
+								var childMenu = childrenMenu[i];
+								//如果是当前查看的菜单
+								if(childMenu.code == menuCode){
+									leftHtml += '<li>'+
+												'<a href="./content.html?ct=' + childMenu.contentType + '&m=' + childMenu.code + '&pc=' + parentCode + '" class="wz_a active">'+
+													'<div class="wz time1">' + childMenu.name + '</div>'+
+													'<div class="sk time1"></div>'+
+												'</a>'+
+											'</li>';
+								}else{
+									leftHtml += '<li>' +
+												'<a href="./content.html?ct=' + childMenu.contentType + '&m=' + childMenu.code + '&pc=' + parentCode + '" class="wz_a time1">' +
+													'<div class="wz time1">' + childMenu.name + '</div>' +
+													'<div class="sk time1"></div>' +
+												'</a>'+
+											'</li>';
+								}
+							}
+						}else{
+							hasChildMenu = false;
 						}
-					}else{
-						hasChildMenu = false;
-					}
-					getContent();
+						getContent();
 
-					if (history.pushState) {
-						history.replaceState(null, document.title, location.href.split("#")[0]+location.hash);
-					}
-				//不是当前菜单的父菜单
-				}else{
-					if(/^ind/.test(pMenu.code)){
-						topHtml = '<li><a href="../home/index.html" class="wa time1">首页</a></li>' + topHtml;
-					}else {
-						topHtml += '<li><a href="./content.html?ct=' + pMenu.contentType + '&m=' + pMenu.code + '" class="wa time1">' + pMenu.name + '</a></li>';
-					}
+						if (history.pushState) {
+							history.replaceState(null, document.title, location.href.split("#")[0]+location.hash);
+						}
+					//不是当前菜单的父菜单
+					}else{
+						if(/^ind/.test(pMenu.code)){
+							topHtml = '<li><a href="../home/index.html" class="wa time1">首页</a></li>' + topHtml;
+						}else {
+							topHtml += '<li><a href="./content.html?ct=' + pMenu.contentType + '&m=' + pMenu.code + '" class="wa time1">' + pMenu.name + '</a></li>';
+						}
+					}	
 				}
 			}
 		//如果是查看一级菜单的内容
 		}else{
+			//遍历顶级菜单
 			for(var j = 0; j < menuSeq.length; j++){
 				var pCode = menuSeq[j], pMenu = menuArr1[pCode];
-
-				if(pCode == menuCode){
-					topHtml += '<li><a href="./content.html?ct='+pMenu.contentType+'&m='+ pMenu.code+'" class="wa active">'+pMenu.name+'</a></li>';
-					//一级菜单的子菜单
-					var childrenMenu = menuArr[pCode];
-					//有子菜单
-					if(childrenMenu.length){
-						hasChildMenu = true;
-						//如果当前一级菜单是公司简介，并且有子菜单，则添加name为 公司简介 的菜单
-						if(/^com/.test(pCode)){
-							childrenMenu.unshift({
-								"code": "gsjj",
-								"parentCode": pCode,
-								"name": "公司简介",
-								"contentType": "ele"
-							});
-						}
-						for(var k = 0; k < childrenMenu.length; k++){
-							var childMenu = childrenMenu[k];
-							//默认显示第一个子菜单
-							if(k == 0){
-								document.title = childMenu.name;
-								menuCode = childMenu.code;
-								contentType = childMenu.contentType;
-								parentCode = pCode;
-								leftHtml += '<li>'+
-												'<a href="./content.html?ct='+childMenu.contentType+'&m='+ childMenu.code+'&pc='+pCode+'" class="wz_a active">'+
-													'<div class="wz time1">'+childMenu.name+'</div>'+
-													'<div class="sk time1"></div>'+
-												'</a>'+
-											'</li>';
-							}else{
-								leftHtml += '<li>'+
-												'<a href="./content.html?ct='+childMenu.contentType+'&m='+ childMenu.code+'&pc='+pCode+'" class="wz_a time1">'+
-													'<div class="wz time1">'+childMenu.name+'</div>'+
-													'<div class="sk time1"></div>'+
-												'</a>'+
-											'</li>';
+				//是web菜单
+				if( /^M_Web$/.test( pMenu.location ) ){
+					if(pCode == menuCode){
+						topHtml += '<li><a href="./content.html?ct='+pMenu.contentType+'&m='+ pMenu.code+'" class="wa active">'+pMenu.name+'</a></li>';
+						//一级菜单的子菜单
+						var childrenMenu = menuArr[pCode];
+						//有子菜单
+						if(childrenMenu.length){
+							hasChildMenu = true;
+							//如果当前一级菜单是公司简介，并且有子菜单，则添加name为 公司简介 的菜单
+							if(/^com/.test(pCode)){
+								childrenMenu.unshift({
+									"code": "gsjj",
+									"parentCode": pCode,
+									"name": "公司简介",
+									"contentType": "ele"
+								});
 							}
+							for(var k = 0; k < childrenMenu.length; k++){
+								var childMenu = childrenMenu[k];
+								//默认显示第一个子菜单
+								if(k == 0){
+									document.title = childMenu.name;
+									menuCode = childMenu.code;
+									contentType = childMenu.contentType;
+									parentCode = pCode;
+									leftHtml += '<li>'+
+													'<a href="./content.html?ct='+childMenu.contentType+'&m='+ childMenu.code+'&pc='+pCode+'" class="wz_a active">'+
+														'<div class="wz time1">'+childMenu.name+'</div>'+
+														'<div class="sk time1"></div>'+
+													'</a>'+
+												'</li>';
+								}else{
+									leftHtml += '<li>'+
+													'<a href="./content.html?ct='+childMenu.contentType+'&m='+ childMenu.code+'&pc='+pCode+'" class="wz_a time1">'+
+														'<div class="wz time1">'+childMenu.name+'</div>'+
+														'<div class="sk time1"></div>'+
+													'</a>'+
+												'</li>';
+								}
+							}
+						}else{
+							document.title = pMenu.name;
+							hasChildMenu = false;
 						}
+						getContent();
+						history.pushState && history.replaceState(null, document.title, location.href.split("#")[0]+location.hash);
 					}else{
-						document.title = pMenu.name;
-						hasChildMenu = false;
-					}
-					getContent();
-					history.pushState && history.replaceState(null, document.title, location.href.split("#")[0]+location.hash);
-				}else{
-					if(/^ind/.test(pMenu.code)){
-						topHtml = '<li><a href="../home/index.html" class="wa time1">'+pMenu.name+'</a></li>' + topHtml;
-					}else {
-						topHtml += '<li><a href="./content.html?ct=' + pMenu.contentType + '&m=' + pMenu.code + '" class="wa time1">' + pMenu.name + '</a></li>';
+						if(/^ind/.test(pMenu.code)){
+							topHtml = '<li><a href="../home/index.html" class="wa time1">'+pMenu.name+'</a></li>' + topHtml;
+						}else {
+							topHtml += '<li><a href="./content.html?ct=' + pMenu.contentType + '&m=' + pMenu.code + '" class="wa time1">' + pMenu.name + '</a></li>';
+						}
 					}
 				}
 			}
@@ -383,9 +389,13 @@ define([
 				if(res.success){
 					var data = res.data,
 						html = "";
-					data = data.length && data[0];
-					html = addEle(data);
-					$("#n_right").html(html);
+					if(data.length){
+						data = data[0];
+						html = addEle(data);
+						$("#n_right").html(html);
+					}else{
+						doError();
+					}
 				}else{
 					doError();
 				}
@@ -440,7 +450,8 @@ define([
 								"<div class='hen'></div>");
 					var data = res.data;
 					$("#addr").replaceWith(addRightCompany(data));
-					addMap(data.longitude, data.latitude);
+					//addMap(data.longitude, data.latitude);
+					addMap(data.province, data.city, data.area, data.address);
 				}else{
 					doError();
 				}
@@ -480,18 +491,43 @@ define([
 		html += '</p></div>';
 		return html;
 	}
-	function addMap(longitude, latitude) {
+	// function addMap(longitude, latitude) {
+	// 	// 百度地图API功能
+	// 	var map = new BMap.Map("allmap");    // 创建Map实例
+	// 	var point = new BMap.Point(longitude, latitude);
+	// 	map.centerAndZoom(point, 14);  // 初始化地图,设置中心点坐标和地图级别
+	// 	map.addControl(new BMap.MapTypeControl());   //添加地图类型控件
+	// 	map.addControl(new BMap.NavigationControl());        // 添加平移缩放控件
+	// 	map.addControl(new BMap.ScaleControl());             // 添加比例尺控件
+	// 	var marker = new BMap.Marker(point);// 创建标注
+	// 	map.addOverlay(marker);             // 将标注添加到地图中
+	// 	marker.disableDragging();           // 不可拖拽
+	// 	map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+	// }
+	function addMap(province, city, area, address) {
 		// 百度地图API功能
 		var map = new BMap.Map("allmap");    // 创建Map实例
-		var point = new BMap.Point(longitude, latitude);
-		map.centerAndZoom(point, 14);  // 初始化地图,设置中心点坐标和地图级别
-		map.addControl(new BMap.MapTypeControl());   //添加地图类型控件
-		map.addControl(new BMap.NavigationControl());        // 添加平移缩放控件
-		map.addControl(new BMap.ScaleControl());             // 添加比例尺控件
-		var marker = new BMap.Marker(point);// 创建标注
-		map.addOverlay(marker);             // 将标注添加到地图中
-		marker.disableDragging();           // 不可拖拽
-		map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+
+		// 创建地址解析器实例
+		var myGeo = new BMap.Geocoder();
+		// 将地址解析结果显示在地图上,并调整地图视野
+		myGeo.getPoint(province+city+area+address, function(point){
+			if (point) {
+				map.centerAndZoom(point, 14);
+				map.addOverlay(new BMap.Marker(point));
+				map.addControl(new BMap.MapTypeControl());   //添加地图类型控件
+				//map.setCurrentCity("");          // 设置地图显示的城市 此项是必须设置的
+				map.addControl(new BMap.NavigationControl());        // 添加平移缩放控件
+				map.addControl(new BMap.ScaleControl());             // 添加比例尺控件
+				var marker = new BMap.Marker(point);// 创建标注
+				map.addOverlay(marker);             // 将标注添加到地图中
+				marker.disableDragging();           // 不可拖拽
+				map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+			}else{
+				base.showMsg("您选择地址没有解析到结果!");
+			}
+		}, province);
+		
 	}
 	
 	function doError(){

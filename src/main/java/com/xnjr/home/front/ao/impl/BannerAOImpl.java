@@ -6,20 +6,18 @@ import org.springframework.stereotype.Service;
 import com.xnjr.home.front.ao.IBannerAO;
 import com.xnjr.home.front.http.BizConnecter;
 import com.xnjr.home.front.http.JsonUtils;
-import com.xnjr.home.front.req.XN806053Req;
+import com.xnjr.home.front.req.XN806051Req;
 
 @Service
 public class BannerAOImpl implements IBannerAO {
 
 	@Override
-	public Object getBannerList(String name, String parentCode, String companyCode) {
-		XN806053Req req = new XN806053Req();
-        req.setName(name);
+	public Object getBannerList(String companyCode, String location) {
+		XN806051Req req = new XN806051Req();
         req.setType("2");
-        req.setStatus("1");
-        req.setParentCode(parentCode);
         req.setCompanyCode(companyCode);
-        return BizConnecter.getBizData("806053", JsonUtils.object2Json(req),
+        req.setLocation(location);
+        return BizConnecter.getBizData("806051", JsonUtils.object2Json(req),
             Object.class);
 	}
 

@@ -8,6 +8,7 @@ define([
 
 	function init(){
 		if(COMPANYCODE = sessionStorage.getItem("compCode")){
+			getBanner();
 			var data = sessionStorage.getItem("compInfo");
 			if(data){
 				data = JSON.parse(data);
@@ -15,9 +16,7 @@ define([
 			}else{
 				getCompany();
 			}
-			var wxCoopCode = sessionStorage.getItem("wxCoopCode");
-			if(wxCoopCode){
-				getBanner(wxCoopCode);
+			if(sessionStorage.getItem("wxMenuCode")){
 				wxMenuName = sessionStorage.getItem("wxMenuName");
                 $("#wxdjcd").text(wxMenuName);
 			}else{
@@ -32,6 +31,7 @@ define([
 
 	function getMyCont(res){
 		if(COMPANYCODE = sessionStorage.getItem("compCode")){
+			getBanner();
 			base.addIcon();
 			addCompanyInfo(res.data);
 			getWXCode();
@@ -72,13 +72,6 @@ define([
                         //公司简介菜单
                         }else if(/^com/.test(list[i].code)){
                             sessionStorage.setItem("compMCode", list[i].code);
-                        //微信首页菜单
-                        }else if(/^inw/.test(list[i].code)){
-                            sessionStorage.setItem("wxIndexCode", list[i].code);
-                        //微信我要合作菜单
-                        }else if(/^cin/.test(list[i].code)){
-							getBanner(list[i].code);
-                            sessionStorage.setItem("wxCoopCode", list[i].code);
                         }
 					}
 				}
@@ -101,14 +94,17 @@ define([
     	});
 	}
 
-	function getBanner(code){
-        base.getBanner(COMPANYCODE, code)
+	function getBanner(){
+        base.getBanner(COMPANYCODE, "B_Mobile_WYHZ")
             .then(function(res){
                 if(res.success){
                     var data = res.data, html = "";
                     for(var i = 0; i < data.length; i++){
                         html += '<div class="swiper-slide"><img class="wp100" src="'+data[i].pic+'"></div>';
                     }
+					if(data.length == 1){
+						$("#swiper-pagination").remove()
+					}
                     $("#swr").html(html);
                     swiperImg();
                 }

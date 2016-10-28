@@ -105,7 +105,7 @@ define([
     function addTitle(){
         if(name){
             document.title = name;
-            var $iframe = $('<iframe src="/static/images/favicon.ico"></iframe>');
+            var $iframe = $('<iframe src="/static/images/favicon.ico" class="hidden"></iframe>');
             $iframe.on('load',function() {
                 setTimeout(function() {
                     $iframe.off('load').remove();

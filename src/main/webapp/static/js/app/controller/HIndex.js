@@ -7,17 +7,11 @@ define([
     init();
     function init(){
         if(COMPANYCODE = sessionStorage.getItem("compCode")){
+            getBanner();
             base.addIcon();
             if(sessionStorage.getItem("wxMenuCode")){
                 var name = sessionStorage.getItem("wxMenuName");
                 $("#wxdjcd").text(name);
-                var idxCode;
-                //首页菜单code
-                if(idxCode = sessionStorage.getItem("wxIndexCode")){
-                    getBanner(idxCode);
-                }else{
-                    getWXCode();
-                }
             }else{
                 getWXCode();
             }
@@ -25,6 +19,7 @@ define([
             base.getCompanyByUrl()
                 .then(function(){
                     if(COMPANYCODE = sessionStorage.getItem("compCode")){
+                        getBanner();
                         base.addIcon();
                         getWXCode();
                     }else{
@@ -34,13 +29,16 @@ define([
                 });
         }
     }
-    function getBanner(code){
-        base.getBanner(COMPANYCODE, code)
+    function getBanner(){
+        base.getBanner(COMPANYCODE, "B_Mobile_SY")
             .then(function(res){
                 if(res.success){
                     var data = res.data, html = "";
                     for(var i = 0; i < data.length; i++){
                         html += '<div class="swiper-slide"><img class="wp100 hp100" src="'+data[i].pic+'"></div>';
+                    }
+                    if(data.length == 1){
+                        $("#swiper-pagination").remove();
                     }
                     $("#swr").html(html);
                     swiperImg();
@@ -63,13 +61,6 @@ define([
                         //公司简介菜单
                         }else if(/^com/.test(list[i].code)){
                             sessionStorage.setItem("compMCode", list[i].code);
-                        //微信首页菜单
-                        }else if(/^inw/.test(list[i].code)){
-                            sessionStorage.setItem("wxIndexCode", list[i].code);
-                            getBanner(list[i].code);
-                        //微信我要合作菜单
-                        }else if(/^cin/.test(list[i].code)){
-                            sessionStorage.setItem("wxCoopCode", list[i].code);
                         }
                     }
                 }

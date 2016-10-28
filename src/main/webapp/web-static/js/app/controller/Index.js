@@ -4,19 +4,12 @@ define([
 	'Handlebars',
 	'lib/swiper-3.3.1.jquery.min'
 ], function (base, Ajax, Handlebars, Swiper) {
-	var COMPANYCODE;
+	var COMPANYCODE, hasCode = false;
 	var footTmpl = __inline('../ui/foot.handlebars');
-	var mySwiper = new Swiper ('.swiper-container', {
-            direction: 'horizontal',
-            loop: true,
-            autoplay: 2000,
-            autoplayDisableOnInteraction: false,
-            // 如果需要分页器
-            pagination: '.swiper-pagination'
-        });
 	initView();
 	function initView(){
 		if(COMPANYCODE = sessionStorage.getItem("compCode")){
+			getBanner();
 			var data = sessionStorage.getItem("compInfo");
 			if(data){
 				data = JSON.parse(data);
@@ -24,19 +17,20 @@ define([
 			}else{
 				getCompany();
 			}
-			base.addIcon();
 			getMenuList();
+			base.addIcon();
 		}else{
 			base.getCompanyByUrl(getMyCont);
 		}
-		addListeners();
 	}
 	function getMyCont(res){
 		if(COMPANYCODE = sessionStorage.getItem("compCode")){
+			getBanner();
 			base.addIcon();
 			getMenuList();
 			addCompanyInfo(res);
 		}else{
+			removeLoading();
 			base.showMsg("非常抱歉，暂时无法获取公司信息!");
 		}
 	}
@@ -63,11 +57,11 @@ define([
 					}
 					for(var j = 0; j < menuSeq.length; j++){
 						//不是微信顶级菜单、微信首页和微信我要合作
-						if(!/^wei/.test(menuSeq[j]) && !/^inw/.test(menuSeq[j]) && !/^cin/.test(menuSeq[j])){
+						//if(!/^wei/.test(menuSeq[j]) && !/^inw/.test(menuSeq[j]) && !/^cin/.test(menuSeq[j])){
+						if( /^M_Web$/.test( menuArr1[ menuSeq[j] ].location ) ){
 							//父菜单
 							var d = menuArr1[menuSeq[j]];
 							if(/^ind/.test(d.code)){
-								getBanner(d.code);
 								html = '<li><a href="./index.html" class="wa active">首页</a></li>' + html;
 							}else{
 								html += '<li><a href="../menu/content.html?ct='+d.contentType+'&m='+d.code+'" class="wa time1">'+d.name+'</a></li>';
@@ -101,34 +95,45 @@ define([
 			$("#companyLogo").attr("src", data.logo);
 			$("#qrCode").attr("src", data.qrCode);
 			$("#bigQrCode").attr("src", data.qrCode);
+			addListeners();
 		}else{
 			base.showMsg("非常抱歉，暂时无法获取公司信息!")
 		}
 	}
 
-	function getBanner(code){
-        base.getBanner(COMPANYCODE, code)
+	function getBanner(){
+        base.getBanner(COMPANYCODE, "B_Web_SY")
             .then(function(res){
                 if(res.success){
                     var data = res.data, html = "";
                     for(var i = 0; i < data.length; i++){
-                        html += '<div class="swiper-slide"><img class="wp100" src="'+data[i].pic+'"></div>';
+                        html += '<div class="swiper-slide"><img src="'+data[i].pic+'"></div>';
+                    }
+					if(data.length == 1){
+                        $("#swiper-pagination").remove();
                     }
                     $("#swr").html(html);
                     swiperImg();
                 }else{
 					base.showMsg("非常抱歉，暂时无法获取数据!")
 				}
+				removeLoading();
             });
     }
+
+	function removeLoading(){
+		$("#swiper-container").removeClass("hp100");
+		var ldIcon = $("#loadingIcon");
+		ldIcon.length && ldIcon.remove();
+		$("#mask").addClass("hidden");
+	}
 
 	function swiperImg(){
         var mySwiper = new Swiper ('.swiper-container', {
             direction: 'horizontal',
-            loop: true,
             autoplay: 2000,
             autoplayDisableOnInteraction: false,
-            // 如果需要分页器
+			// 如果需要分页器
             pagination: '.swiper-pagination'
         });
     }

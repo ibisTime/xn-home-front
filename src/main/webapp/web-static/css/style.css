@@ -29,13 +29,22 @@ input,select,button{-webkit-appearance: none;-moz-appearance: none;appearance: n
 }
 .top .nav{ float:left; margin-left:10px;}
 .nav li{float:left;}
-.nav li a{ height:117px; float:left; padding:0 8px; font:16px/120px "微软雅黑";}
+.nav li a{ height:117px; float:left; padding:0 8px; font:18px/120px "微软雅黑";}
 .nav li .wa{ border-bottom:solid 3px #fff; color:#000;}
-.nav li .wa.active{ border-bottom:solid 3px #a46810; color:#a46810; background:#f2f2f2;}
+.nav li .wa.active{ border-bottom:solid 3px #a46810; color:#ec8f06; background:#f2f2f2;}
 .top .nav li a:hover{transform: scale(1.1);}
 .top .tel{ height: 120px;right: 0;position: absolute;display: inline-block;height: 120px;line-height: 120px;}
 .tel .icon{ width:30px; height:30px; background:url(../images/tel_icon.png) no-repeat; display: inline-block; vertical-align: middle;}
-.tel .wz{ font:18px/30px "微软雅黑"; color:#a46810; margin-left:8px; display:inline-block; vertical-align: middle;}
+.tel .wz{
+	color:#dc8607;
+	margin-left:8px; 
+	display:inline-block; 
+	vertical-align: middle;
+	font-family: Arial;
+    font-weight: 700;
+    font-size: 26px;
+    letter-spacing: 1px;
+}
 
 .n_left{ width:240px; height:436px; float:left; background:url(../images/left_bg.jpg) no-repeat top right; margin-top:12px;}
 .n_left .title{ width:100%; height:46px; float:left; text-align:center; font:20px/46px "微软雅黑"; color:#fff; background:#a46810; border-top-left-radius:5px;border-top-right-radius:5px; -moz-border-top-left-radius:5px; -moz-border-top-right-radius:5px; -webkit-border-top-left-radius:5px; -webkit-border-top-right-radius:5px; overflow:hidden;}
@@ -47,7 +56,7 @@ input,select,button{-webkit-appearance: none;-moz-appearance: none;appearance: n
 .l_list .wz_a .wz{ width:100%; height:43px; overflow:hidden; font:18px/43px "微软雅黑"; text-align:center; float:left; position:absolute; top:0; left:0; z-index:1;}
 .l_list .wz_a .wz{ color:#000;}
 .l_list .wz_a.active .wz{ color:#fff;}
-.l_list .wz_a .sk{height:43px; background:#c87700; position:absolute; right:0; top:0;border-top-left-radius:18px;border-bottom-left-radius:18px; -moz-border-top-left-radius:18px; -moz-border-bottom-left-radius:18px; -webkit-border-top-left-radius:18px; -webkit-border-bottom-left-radius:18px;}
+.l_list .wz_a .sk{height:43px; background:#ec8f06; position:absolute; right:0; top:0;border-top-left-radius:18px;border-bottom-left-radius:18px; -moz-border-top-left-radius:18px; -moz-border-bottom-left-radius:18px; -webkit-border-top-left-radius:18px; -webkit-border-bottom-left-radius:18px;}
 .l_list .wz_a .sk{ width:0;}
 .l_list .wz_a.active .sk{ width:100%;}
 
@@ -97,16 +106,16 @@ input,select,button{-webkit-appearance: none;-moz-appearance: none;appearance: n
 .news_list li a .n_xxwz{ width:556px; height:40px; float:left; overflow:hidden; font:12px/20px "微软雅黑"; color:#909090;}
 .news_list li a:hover .n_title,.news_list li a:hover .n_xxwz{ color:#fff;}
 
-.foot{ width:100%; min-width:1080px; height:164px; float:left; background:#292929;}
-.foot .f_right{ width:626px; margin:24px 10px 0 0; display:inline-block;}
-.f_right .area1,.f_right .area2,.f_right .area3{ float:left; margin-top:14px; overflow:hidden; font:15px/24px "微软雅黑"; color:#c6c6c6;}
-.f_right .area1{ width:266px;}
+.foot{ width:100%; min-width:1080px; float:left; background:#292929;}
+.foot .f_right{ margin:24px 10px 24px 0; display:inline-block; text-align: left;}
+.f_right .area1,.f_right .area2,.f_right .area3{ float:left; overflow:hidden; font:16px/24px "微软雅黑"; color:#c6c6c6;}
+.f_right .area1{ margin-right: 60px;}
 .f_right .area2{ width:360px;}
 .f_right .area3{ width:100%; margin:0;}
 .f_right .area1 a{ color:#c6c6c6;}
 .f_right .area1 a:hover{ color:#fff;text-decoration:underline;}
 
-.copyright{width:100%; min-width:1080px; height:35px; float:left; background:#4d4d4d; font:14px/35px "微软雅黑"; color:#cdcdcd; text-align:center;}
+.copyright{width:100%; min-width:1080px; height:35px; float:left; background:#393939; font:14px/35px "微软雅黑"; color:#cdcdcd; text-align:center;}
 .copyright a{ color:#cdcdcd; margin-left:6px; display:inline;}
 .copyright a:hover{ color:#fff; text-decoration:underline;}
 
@@ -259,6 +268,9 @@ input,select,button{-webkit-appearance: none;-moz-appearance: none;appearance: n
 }
 .wp100{
 	width: 100%;
+}
+.hp100{
+	height: 100%;
 }
 .cp-barCode{
 	width: 110px;
@@ -622,4 +634,17 @@ a{
     right: 0;
     margin: auto;
 	z-index: 991;
+	max-height: 100%;
+    max-width: 100%;
+}
+.index-swiper img{
+	width: 100%;
+	margin-bottom: -3px;
+}
+.nav.index-nav li .wa.active{
+	background: transparent;
+	border-bottom: none;
+}
+.nav.index-nav li .wa {
+    border-bottom: none;
 }

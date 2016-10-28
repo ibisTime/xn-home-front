@@ -1510,6 +1510,9 @@ textarea {
 .hp100 {
     height: 100%;
 }
+.hp70p {
+    height: 70px;
+}
 
 /*定位*/
 .re {

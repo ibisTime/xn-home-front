@@ -68,12 +68,9 @@ public class CompanyController {
     @RequestMapping(value = "/menu/list", method = RequestMethod.GET)
     @ResponseBody
     public Object doGetMenuList(
-            @RequestParam(value = "name", required = false) String name,
-            @RequestParam(value = "location", required = false) String location,
-            @RequestParam(value = "contentType", required = false) String contentType,
-            @RequestParam("companyCode") String companyCode) {
-        return menuAO.doGetMenuList(name, location, contentType,
-        	companyCode);
+    		@RequestParam("companyCode") String companyCode,
+    		@RequestParam(value = "location", required = false) String location) {
+        return menuAO.doGetMenuList(companyCode, location);
     }
     //分页获取素材
     @RequestMapping(value = "/acontent/page", method = RequestMethod.GET)
@@ -113,9 +110,8 @@ public class CompanyController {
     @RequestMapping(value = "/banner/list", method = RequestMethod.GET)
     @ResponseBody
     public Object getBannerList(
-    		@RequestParam(value = "name", required = false) String name,
-    		@RequestParam(value = "parentCode", required = false) String parentCode,
+    		@RequestParam("location") String location,
 			@RequestParam("companyCode") String companyCode){
-    	return bannerAO.getBannerList(name, parentCode, companyCode);
+    	return bannerAO.getBannerList(companyCode, location);
     }
 }

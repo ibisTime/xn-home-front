@@ -1,24 +1,31 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" class="wp100 hp100">
 <head>
 	<link rel="import" href="../head.html?__inline"/>
     <title>首页</title>
+    <style>
+        .foot{
+            z-index: 10 !important;
+        }
+        .copyright{
+            z-index: 10 !important;
+        }
+    </style>
 </head>
-<body>
-    <div class="top" style="float: none;">
+<body class="wp100 hp100">
+    <div class="top" style="position: fixed;z-index: 99;">
         <div class="main">
             <div class="logo"><img id="companyLogo" src=""/></div>
-            <div id="nav" class="nav"></div>
+            <div id="nav" class="nav index-nav"></div>
             <div class="tel"><span class="icon"></span><span id="top-tel" class="wz"></span></div>
         </div>
     </div>
-    <div class="wp100">
-        <div class="swiper-container">
-            <div class="swiper-wrapper" id="swr">
-                <!--<div class="swiper-slide"><img class="wp100" src="../../images/about.jpg"></div>-->
-            </div>
-            <div class="swiper-pagination"></div>
+    <div class="swiper-container wp100 index-swiper hp100" id="swiper-container">
+        <div class="swiper-wrapper" id="swr">
+            <i id="loadingIcon" style='width: 100%;height: 100%;position: absolute;margin: auto;z-index: 999;' class='loading-icon'></i>
         </div>
+        <!-- 如果需要分页器 -->
+        <div class="swiper-pagination" id="swiper-pagination"></div>
     </div>
     <div id="foot" class="foot"></div>
     <div class="fixedDiv" id="hzsq">
@@ -29,7 +36,7 @@
         <img id="qrCode" class="cursor_p" src=""/>
         <div>扫一扫，微信洽谈</div>
     </div>
-    <div id="mask" class="mask hidden"></div>
+    <div id="mask" class="mask"></div>
     <div id="hzsq-dialog" class="register_wrapper hidden">
         <div class="register_dialog" style="margin: -265px 0 0 -190px">
             <div class="register_title">

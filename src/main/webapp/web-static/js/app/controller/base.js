@@ -176,7 +176,21 @@ define([
                     if (res.success && !$.isEmptyObject(res.data)) {
                         sessionStorage.setItem("compCode", res.data.code);
                         sessionStorage.setItem("icon", res.data.icon);
-                        sessionStorage.setItem("compInfo", JSON.stringify(res.data));
+                        var data = {
+                            "name": res.data.name,
+                            "email": res.data.email,
+                            "mobile": res.data.mobile,
+                            "slogan": res.data.slogan,
+                            "province": res.data.province,
+                            "city": res.data.city,
+                            "area": res.data.area,
+                            "address": res.data.address,
+                            "logo": res.data.logo,
+                            "qrCode": res.data.qrCode,
+                            "copyright": res.data.copyright,
+                            "abbrName": res.data.abbrName
+                        }
+                        sessionStorage.setItem("compInfo", JSON.stringify(data));
                     }
                     func && func(res);
                 });
@@ -185,9 +199,9 @@ define([
             return Ajax.get(APIURL + '/company/menu/list', 
                 {"companyCode": code}, true);
         },
-        getBanner: function (code, pCode){
+        getBanner: function (code, location){
             return Ajax.get(APIURL + '/company/banner/list',
-                {"companyCode": code, "parentCode": pCode});
+                {"companyCode": code, "location": location});
         },
         getContentPage: function(code, start, limit){
             return Ajax.get(APIURL + "/company/acontent/page",

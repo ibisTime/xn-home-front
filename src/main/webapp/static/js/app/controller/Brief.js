@@ -7,6 +7,7 @@ define([
     init();
     function init(){
         if(COMPANYCODE = sessionStorage.getItem("compCode")){
+            getBanner();
             var data = sessionStorage.getItem("compInfo");
             if(data){
                 data = JSON.parse(data);
@@ -17,12 +18,11 @@ define([
             //公司简介菜单
             var compMenuCode = sessionStorage.getItem("compMCode");
             if(compMenuCode){
-                getBanner(compMenuCode);
                 getCompMenuList();
                 var name = sessionStorage.getItem("wxMenuName");
                 $("#wxdjcd").text(name);
             }else{
-                getCompMenuList(true);
+                getCompMenuList();
             }
             base.addIcon();
         }else{
@@ -32,6 +32,7 @@ define([
 
     function getMyCont(res){
         if(COMPANYCODE = sessionStorage.getItem("compCode")){
+            getBanner();
             base.addIcon();
             addCompanyInfo(res.data);
             getCompMenuList(true);
@@ -57,7 +58,7 @@ define([
         $("#slogan").text(data.slogan);
     }
 
-    function getCompMenuList(flag){
+    function getCompMenuList(){
         return base.getMenuList(COMPANYCODE)
             .then(function(res){
                 if(res.success){
@@ -79,15 +80,6 @@ define([
                             }else if(/^com/.test(dd.code)){
                                 cCode = dd.code;
                                 sessionStorage.setItem("compMCode", cCode);
-                                if(flag){
-                                    getBanner(cCode);
-                                }
-                            //微信首页菜单
-                            }else if(/^inw/.test(dd.code)){
-                                sessionStorage.setItem("wxIndexCode", dd.code);
-                            //微信我要合作菜单
-                            }else if(/^cin/.test(dd.code)){
-                                sessionStorage.setItem("wxCoopCode", dd.code);
                             }
 						}else{
                             if(!menuArr[pc]){
@@ -115,14 +107,17 @@ define([
             });
     }
 
-    function getBanner(code){
-        return base.getBanner(COMPANYCODE, code)
+    function getBanner(){
+        return base.getBanner(COMPANYCODE, "B_Mobile_GSJJ")
             .then(function(res){
                 if(res.success){
                     var data = res.data, html = "";
                     for(var i = 0; i < data.length; i++){
                         html += '<div class="swiper-slide"><img class="wp100 hp100" src="'+data[i].pic+'"></div>';
                     }
+                    if(data.length == 1){
+						$("#swiper-pagination").remove()
+					}
                     $("#swr").html(html);
                     swiperImg();
                 }
@@ -133,9 +128,7 @@ define([
         var mySwiper = new Swiper ('.swiper-container', {
             direction: 'horizontal',
             autoplay: 2000,
-            autoplayDisableOnInteraction: false,
-            // 如果需要分页器
-            pagination: '.swiper-pagination'
+            autoplayDisableOnInteraction: false
         });
     }
 });

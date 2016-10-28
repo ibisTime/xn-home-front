@@ -9,12 +9,14 @@ define([
     init();
     function init(){
         if(COMPANYCODE = sessionStorage.getItem("compCode")){
+            getBanner();
             base.addIcon();
             getMyContent();
         }else{
             base.getCompanyByUrl()
                 .then(function(){
                     if(COMPANYCODE = sessionStorage.getItem("compCode")){
+                        getBanner();
                         base.addIcon();
                         getMyContent();
                     }else{
@@ -37,7 +39,6 @@ define([
     function getMyContent(){
         wxMenuCode = sessionStorage.getItem("wxMenuCode");
         if(wxMenuCode){
-            getBanner();
             wxMenuName = sessionStorage.getItem("wxMenuName");
             $("#wxdjcd").text(wxMenuName);
             contentType = sessionStorage.getItem("wxMenuType");
@@ -131,7 +132,6 @@ define([
                     for(var i = 0; i < list.length; i++){
                         if(/^wei/.test(list[i].code)){
                             wxMenuCode = list[i].code;
-                            getBanner();
                             wxMenuName = list[i].name;
                             sessionStorage.setItem("wxMenuCode", wxMenuCode)
                             sessionStorage.setItem("wxMenuName", wxMenuName);
@@ -142,12 +142,6 @@ define([
                         //公司简介菜单
                         }else if(/^com/.test(list[i].code)){
                             sessionStorage.setItem("compMCode", list[i].code);
-                        //微信首页菜单
-                        }else if(/^inw/.test(list[i].code)){
-                            sessionStorage.setItem("wxIndexCode", list[i].code);
-                        //微信我要合作菜单
-                        }else if(/^cin/.test(list[i].code)){
-                            sessionStorage.setItem("wxCoopCode", list[i].code);
                         }
                     }
                 }
@@ -155,7 +149,7 @@ define([
     }
     function addTitle(){
         document.title = wxMenuName;
-        var $iframe = $('<iframe src="/static/images/favicon.ico"></iframe>');
+        var $iframe = $('<iframe src="/static/images/favicon.ico" class="hidden"></iframe>');
         $iframe.on('load',function() {
             setTimeout(function() {
                 $iframe.off('load').remove();
@@ -163,13 +157,16 @@ define([
         }).appendTo($("body"));
     }
     function getBanner(){
-        base.getBanner(COMPANYCODE, wxMenuCode)
+        base.getBanner(COMPANYCODE, "B_Mobile_ZDY")
             .then(function(res){
                 if(res.success){
                     var data = res.data, html = "";
                     for(var i = 0; i < data.length; i++){
                         html += '<div class="swiper-slide"><img class="wp100" src="'+data[i].pic+'"></div>';
                     }
+                    if(data.length == 1){
+						$("#swiper-pagination").remove()
+					}
                     $("#swr").html(html);
                     swiperImg();
                 }

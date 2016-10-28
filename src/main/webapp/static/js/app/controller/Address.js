@@ -11,13 +11,7 @@ define([
 
         function init(){
             if(COMPANYCODE = sessionStorage.getItem("compCode")){
-                var data = sessionStorage.getItem("compInfo");
-                if(data){
-                    data = JSON.parse(data);
-                    addCompanyInfo({"success":true,"data": data});
-                }else{
-                    getCompanyInfo();
-                }
+                getCompanyInfo();
                 base.addIcon();
                 if(wxMenuCode = sessionStorage.getItem("wxMenuCode")){
                     wxMenuName = sessionStorage.getItem("wxMenuName");
@@ -50,7 +44,8 @@ define([
             if(res.success){
                 var data = res.data;
                 $("#description").html(data.description);
-                addMap(data.longitude, data.latitude);
+                //addMap(data.longitude, data.latitude);
+                addMap(data.province, data.city, data.area, data.address);
                 $("#brief").html('地址：'+data.province+" "+data.city+" "+data.area+" "+data.address+'</br>电话：'+data.mobile+'</br>网址：'+data.domain);
             }else{
                 doError();
@@ -90,19 +85,30 @@ define([
             $("body").removeClass("bg_fff");
             $("#brief").replaceWith(template);
         }
-        function addMap(longitude, latitude) {
+        function addMap(province, city, area, address) {
             // 百度地图API功能
             var map = new BMap.Map("allmap");    // 创建Map实例
-            var point = new BMap.Point(longitude, latitude);
-            map.centerAndZoom(point, 14);  // 初始化地图,设置中心点坐标和地图级别
-            map.addControl(new BMap.MapTypeControl());   //添加地图类型控件
-            //map.setCurrentCity("");          // 设置地图显示的城市 此项是必须设置的
-            map.addControl(new BMap.NavigationControl());        // 添加平移缩放控件
-            map.addControl(new BMap.ScaleControl());             // 添加比例尺控件
-            var marker = new BMap.Marker(point);// 创建标注
-            map.addOverlay(marker);             // 将标注添加到地图中
-            marker.disableDragging();           // 不可拖拽
-            map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+
+            // 创建地址解析器实例
+            var myGeo = new BMap.Geocoder();
+            // 将地址解析结果显示在地图上,并调整地图视野
+            myGeo.getPoint(province+city+area+address, function(point){
+                if (point) {
+                    map.centerAndZoom(point, 14);
+                    map.addOverlay(new BMap.Marker(point));
+                    map.addControl(new BMap.MapTypeControl());   //添加地图类型控件
+                    //map.setCurrentCity("");          // 设置地图显示的城市 此项是必须设置的
+                    map.addControl(new BMap.NavigationControl());        // 添加平移缩放控件
+                    map.addControl(new BMap.ScaleControl());             // 添加比例尺控件
+                    var marker = new BMap.Marker(point);// 创建标注
+                    map.addOverlay(marker);             // 将标注添加到地图中
+                    marker.disableDragging();           // 不可拖拽
+                    map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+                }else{
+                    base.showMsg("您选择地址没有解析到结果!");
+                }
+            }, province);
+           
         }
     });
 });

@@ -1,40 +1,32 @@
 package com.xnjr.home.front.req;
 
 public class XN806051Req {
-	//名字
-	public String name;
-	//UI位置
-	public String location;
-	//状态
-	public String status;
-	//最后修改人
-	public String updater;
+	//类型	1 菜单 2 banner 3 模块 4 引流
+	private String type;
+	//父编号
+	private String parentCode;
 	//公司编号
-	public String companyCode;
+	private String companyCode;
+	//位置
+	private String location;
 	
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
 	public String getLocation() {
 		return location;
 	}
 	public void setLocation(String location) {
 		this.location = location;
 	}
-	public String getStatus() {
-		return status;
+	public String getType() {
+		return type;
 	}
-	public void setStatus(String status) {
-		this.status = status;
+	public void setType(String type) {
+		this.type = type;
 	}
-	public String getUpdater() {
-		return updater;
+	public String getParentCode() {
+		return parentCode;
 	}
-	public void setUpdater(String updater) {
-		this.updater = updater;
+	public void setParentCode(String parentCode) {
+		this.parentCode = parentCode;
 	}
 	public String getCompanyCode() {
 		return companyCode;
