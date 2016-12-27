@@ -90,6 +90,7 @@ define([
 		if(res.success){
 			var data = res.data,
 				html = footTmpl(data);
+			document.title = data.name;
 			$("#top-tel").text(data.mobile);
 			$("#foot").replaceWith(html);
 			$("#companyLogo").attr("src", data.logo);
